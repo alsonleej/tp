@@ -21,8 +21,16 @@ public class NameTest {
 
     @Test
     public void constructor_nameTooLong_throwsIllegalArgumentException() {
-        String longName = "a".repeat(101); // 101 characters, exceeds max of 100
-        assertThrows(IllegalArgumentException.class, () -> new Name(longName));
+        // Test various lengths over 100 characters
+        assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(101))); // 101 characters
+        assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(102))); // 102 characters
+        assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(150))); // 150 characters
+        assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(200))); // 200 characters
+        assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(1000))); // 1000 characters
+        
+        // Test with valid name pattern but exceeding length
+        String longNameWithSpecialChars = "Alice" + "-".repeat(96); // 101 characters with hyphens
+        assertThrows(IllegalArgumentException.class, () -> new Name(longNameWithSpecialChars));
     }
 
     @Test

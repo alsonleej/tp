@@ -82,8 +82,15 @@ public class ParserUtilTest {
     @Test
     // BVA: name length 101 (invalid)
     public void parseName_exceedsMaxLength_throwsParseException() {
-        String hundredOneAs = "A".repeat(101);
-        assertThrows(IllegalArgumentException.class, () -> ParserUtil.parseName(hundredOneAs));
+        // Test various lengths over 100 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(101))); // 101 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(102))); // 102 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(150))); // 150 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(200))); // 200 characters
+        
+        // Test with valid name pattern but exceeding length
+        String longNameWithSpaces = "John " + "Doe ".repeat(50); // More than 100 characters with spaces
+        assertThrows(ParseException.class, () -> ParserUtil.parseName(longNameWithSpaces));
     }
 
     @Test

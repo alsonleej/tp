@@ -147,7 +147,10 @@ Refer to the [Features](#features) below for details of each command.
   e.g `n/PERSON_NAME [t/TAG]` can be used as `n/Alice Tan t/vipHandler` or as `n/Alice Tan`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG​]…` can be used as ` ` (i.e. 0 times), `t/vipHandler`, `t/vipHandler t/teamLead` etc.
+  e.g. `[t/TAG​]…` can be used as ` ` (i.e. 0 times), `t/vipHandler`, `t/vipHandler t/teamLead` etc.
+
+* Fields can be specified in any order, for all commands.<br>
+  e.g. `add n/Alice Tan p/98765432 e/alicetan@gmail.com` and `add p/98765432 e/alicetan@gmail.com n/Alice Tan` are both valid.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, and `exit`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.

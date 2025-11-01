@@ -48,6 +48,9 @@ public class ParserUtil {
         if (!Name.isValidName(trimmedName)) {
             throw new ParseException(Name.MESSAGE_CONSTRAINTS);
         }
+        if (trimmedName.length() > Name.MAX_NAME_LENGTH) {
+            throw new ParseException(Name.MESSAGE_LENGTH_CONSTRAINT);
+        }
         return new Name(trimmedName);
     }
 
