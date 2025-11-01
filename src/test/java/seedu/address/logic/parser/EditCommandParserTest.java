@@ -209,4 +209,17 @@ public class EditCommandParserTest {
         String veryLongNewName = NAME_DESC_AMY + " " + PREFIX_NAME + "c".repeat(200);
         assertParseFailure(parser, veryLongNewName + EMAIL_DESC_AMY, Name.MESSAGE_LENGTH_CONSTRAINT);
     }
+
+    @Test
+    public void parse_phoneTooLong_failure() {
+        // Test edit command with phone exceeding 50 characters
+        String longPhone51 = NAME_DESC_AMY + " " + PREFIX_PHONE + "1".repeat(51);
+        assertParseFailure(parser, longPhone51, Phone.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longPhone100 = NAME_DESC_AMY + " " + PREFIX_PHONE + "1".repeat(100);
+        assertParseFailure(parser, longPhone100 + EMAIL_DESC_AMY, Phone.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longPhone200 = NAME_DESC_AMY + " " + PREFIX_PHONE + "1".repeat(200);
+        assertParseFailure(parser, longPhone200, Phone.MESSAGE_LENGTH_CONSTRAINT);
+    }
 }

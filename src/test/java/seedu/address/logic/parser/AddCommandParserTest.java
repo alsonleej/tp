@@ -190,4 +190,20 @@ public class AddCommandParserTest {
         String longName200 = " " + PREFIX_NAME + "c".repeat(200);
         assertParseFailure(parser, longName200, Name.MESSAGE_LENGTH_CONSTRAINT);
     }
+
+    @Test
+    public void parse_phoneTooLong_failure() {
+        // Test add command with phone exceeding 50 characters
+        String longPhone51 = " " + PREFIX_PHONE + "1".repeat(51);
+        assertParseFailure(parser, NAME_DESC_BOB + longPhone51 + EMAIL_DESC_BOB,
+                Phone.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longPhone100 = " " + PREFIX_PHONE + "1".repeat(100);
+        assertParseFailure(parser, NAME_DESC_BOB + longPhone100 + EMAIL_DESC_BOB,
+                Phone.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longPhone200 = " " + PREFIX_PHONE + "1".repeat(200);
+        assertParseFailure(parser, NAME_DESC_BOB + longPhone200,
+                Phone.MESSAGE_LENGTH_CONSTRAINT);
+    }
 }

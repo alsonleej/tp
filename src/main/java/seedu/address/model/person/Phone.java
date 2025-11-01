@@ -9,11 +9,13 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Phone {
 
-
+    public static final int MAX_PHONE_LENGTH = 50;
     public static final String MESSAGE_CONSTRAINTS =
             "Phone numbers cannot be blank or contain only spaces.\n"
             + "You can include any format you prefer (e.g., country codes, extensions, notes).\n"
             + "Examples: '911', '+65 1234 5678 (HP)', '(123) 456-7890'";
+    public static final String MESSAGE_LENGTH_CONSTRAINT =
+            "Phone number is too long! Please keep it to 50 characters or less.";
     public static final String VALIDATION_REGEX = ".*\\S.*";
     public final String value;
 
@@ -25,6 +27,7 @@ public class Phone {
     public Phone(String phone) {
         requireNonNull(phone);
         checkArgument(isValidPhone(phone), MESSAGE_CONSTRAINTS);
+        checkArgument(phone.length() <= MAX_PHONE_LENGTH, MESSAGE_LENGTH_CONSTRAINT);
         value = phone;
     }
 

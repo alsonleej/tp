@@ -128,6 +128,28 @@ public class ParserUtilTest {
     }
 
     @Test
+    // BVA: phone length exactly 50 (valid)
+    public void parsePhone_maxLength_returnsPhone() throws Exception {
+        String fiftyOnes = "1".repeat(50);
+        Phone expectedPhone = new Phone(fiftyOnes);
+        assertEquals(expectedPhone, ParserUtil.parsePhone(fiftyOnes));
+    }
+
+    @Test
+    // BVA: phone length 51 (invalid)
+    public void parsePhone_exceedsMaxLength_throwsParseException() {
+        // Test various lengths over 50 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(51))); // 51 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(52))); // 52 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(100))); // 100 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(200))); // 200 characters
+        
+        // Test with valid phone pattern but exceeding length
+        String longPhoneWithFormat = "+65 " + "1".repeat(48); // 51 characters with format
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone(longPhoneWithFormat));
+    }
+
+    @Test
     // EP: valid phone with surrounding whitespace trimmed
     public void parsePhone_validValueWithWhitespace_returnsTrimmedPhone() throws Exception {
         String phoneWithWhitespace = WHITESPACE + VALID_PHONE + WHITESPACE;
