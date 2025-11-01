@@ -744,11 +744,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   FirstImpressions throws error "Invalid client name. Must be 1-100 characters with at least one letter. Only letters, numbers, spaces, hyphens, apostrophes, periods, and slashes are allowed." \
   Use case ends
 
-- 2d. Duplicate parameter \
+- 2d. Invalid datetime format \
+  FirstImpressions throws error "Invalid date/time format or value!\nPlease use the format: YYYY-MM-DD HH:MM (e.g., 2024-12-25 14:30)" \
+  Use case ends
+
+- 2e. Invalid datetime value \
+  FirstImpressions throws error "\"[datetime]\" is not a valid datetime" (e.g., "\"2026-02-31 14:00\" is not a valid datetime" for invalid dates like February 31st) \
+  Use case ends
+
+- 2f. Duplicate parameter \
   FirstImpressions throws error "Parameter [parameter] specified multiple times. Each parameter should appear only once." \
   Use case ends
 
-- 3e. Unknown parameter \
+- 3g. Unknown parameter \
   FirstImpressions throws error "Unknown parameter: [parameter]. Valid parameters are /d, /c, /p, /desc" \
   Use case ends
 

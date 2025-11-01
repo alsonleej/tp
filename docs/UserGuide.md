@@ -403,7 +403,7 @@ The bookings are sorted with future bookings at the top (in chronological order)
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Dates must be valid calendar dates. <br>
-Invalid dates like 2026-02-31 will be rejected with: "Invalid date/time format or value! Please use the format: YYYY-MM-DD HH:MM (e.g., 2024-12-25 14:30)."
+Invalid dates like `2026-02-31 14:00` will be rejected with: `"2026-02-31 14:00" is not a valid datetime`.
 </div>
 
 Examples:

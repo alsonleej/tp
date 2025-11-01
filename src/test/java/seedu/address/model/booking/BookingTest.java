@@ -104,10 +104,7 @@ public class BookingTest {
         // Test that invalid dates return specific error messages
         String error = Booking.validateDateTime("2026-02-31 10:00");
         assertNotNull(error, "Invalid date should return error message");
-        assertTrue(error.contains("February 31st 2026"),
-                "Error message should contain 'February 31st 2026'");
-        assertTrue(error.contains("does not exist"),
-                "Error message should mention date does not exist");
+        assertEquals("\"2026-02-31 10:00\" is not a valid datetime", error);
     }
 
     @Test
@@ -183,7 +180,7 @@ public class BookingTest {
         // Test that invalid month (e.g., month > 12) returns proper error message
         String error = Booking.validateDateTime("2026-13-01 10:00");
         assertNotNull(error, "Invalid month should return error message");
-        assertTrue(error.contains("does not exist"), "Should contain 'does not exist'");
+        assertEquals("\"2026-13-01 10:00\" is not a valid datetime", error);
     }
 
     @Test
@@ -191,7 +188,7 @@ public class BookingTest {
         // Test date that matches format but cannot be parsed for day extraction
         String error = Booking.validateDateTime("2026-02-31 10:00");
         assertNotNull(error, "Invalid date should return error message");
-        assertTrue(error.contains("does not exist"), "Should contain 'does not exist'");
+        assertEquals("\"2026-02-31 10:00\" is not a valid datetime", error);
     }
 
     @Test
