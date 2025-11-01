@@ -212,6 +212,11 @@ Format: `add n/NAME t/TAG…​`
 * Tags must contain only letters and numbers, without spaces.
 * If person does not already exist in FirstImpressions, the person is created.
 
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:** <br>
+When adding tags to an existing person, other fields like phone number `p/` and email `e/` will be **ignored**. <br>
+To change phone numbers or email addresses, use the `edit` command instead.
+</div>
+
 Examples:
 
 * `add n/Alice Tan t/chineseSpeaking t/closer` <br> will add, to an existing Person `Alice Tan`, the tags `chineseSpeaking` and `closer`. It will be added onto her current tags <br>
@@ -499,7 +504,7 @@ If you do want an empty phone number, set the phone number to "-"!
 Action | Format, Examples
 --------|------------------
 **Help** | `help`
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]…​` <br> e.g., `add n/Alice Tan p/98702930 e/alicetan@gmail.com t/teamLead t/vipHandler`
+**Add** | `add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​` <br> e.g., `add n/Alice Tan p/98702930 e/alicetan@gmail.com t/teamLead t/vipHandler`
 **List** | `list`
 **Edit** | `edit n/OLD_NAME [n/NEW_NAME] [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`<br> e.g.,`edit n/John Doe n/Jane Doe p/91234567 e/janedoe@example.com`
 **Find** | `find n/NAME` or `find t/TAG1 [t/TAG2]…` or `find d/DATE1 [d/DATE2]…`<br> e.g., `find n/John` or `find d/2025-08-18`

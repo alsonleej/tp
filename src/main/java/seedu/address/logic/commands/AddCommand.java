@@ -104,7 +104,28 @@ public class AddCommand extends Command {
                     );
 
                     model.setPerson(existingPerson, updatedPerson);
-                    return new CommandResult(String.format(MESSAGE_TAGS_ADDED, Messages.format(updatedPerson)));
+                    
+                    // Check if phone or email were provided but ignored
+                    boolean hasPhone = toAdd.getPhone() != null;
+                    boolean hasEmail = toAdd.getEmail() != null;
+                    String message = String.format(MESSAGE_TAGS_ADDED, Messages.format(updatedPerson));
+                    
+                    if (hasPhone || hasEmail) {
+                        StringBuilder ignoredFields = new StringBuilder();
+                        if (hasPhone) {
+                            ignoredFields.append("phone number ").append(PREFIX_PHONE.getPrefix());
+                        }
+                        if (hasEmail) {
+                            if (hasPhone) {
+                                ignoredFields.append(" and ");
+                            }
+                            ignoredFields.append("email ").append(PREFIX_EMAIL.getPrefix());
+                        }
+                        message += "\nNote: " + ignoredFields.toString() + " field(s) were ignored. "
+                                + "To change them, use the edit command.";
+                    }
+                    
+                    return new CommandResult(message);
                 }
             }
         }

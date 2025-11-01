@@ -43,8 +43,8 @@ public class AddCommandIntegrationTest {
         Person personInList = model.getAddressBook().getPersonList().get(0);
         Person personWithNewTags = new PersonBuilder()
                 .withName(personInList.getName().fullName)
-                .withPhone(personInList.getPhone() != null ? personInList.getPhone().value : null)
-                .withEmail(personInList.getEmail() != null ? personInList.getEmail().value : null)
+                .withPhone(null)
+                .withEmail(null)
                 .withTags("newTag")
                 .build();
 
@@ -84,8 +84,8 @@ public class AddCommandIntegrationTest {
         Person personInList = model.getAddressBook().getPersonList().get(0);
         Person personWithMixedTags = new PersonBuilder()
                 .withName(personInList.getName().fullName)
-                .withPhone(personInList.getPhone() != null ? personInList.getPhone().value : null)
-                .withEmail(personInList.getEmail() != null ? personInList.getEmail().value : null)
+                .withPhone(null)
+                .withEmail(null)
                 .withTags("newTag1", "newTag2")
                 .build();
 

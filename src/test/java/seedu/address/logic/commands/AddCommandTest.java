@@ -47,7 +47,7 @@ public class AddCommandTest {
     @Test
     public void execute_duplicatePerson_addsTagsToExistingPerson() throws Exception {
         Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends").build();
-        Person personWithNewTags = new PersonBuilder().withName("Alice").withTags("colleagues").build();
+        Person personWithNewTags = new PersonBuilder().withName("Alice").withPhone(null).withEmail(null).withTags("colleagues").build();
         AddCommand addCommand = new AddCommand(personWithNewTags);
         ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
 
@@ -71,7 +71,7 @@ public class AddCommandTest {
     @Test
     public void execute_duplicatePersonWithTags_addsTagsSuccessfully() throws Exception {
         Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends").build();
-        Person personWithNewTags = new PersonBuilder().withName("Alice").withTags("colleagues").build();
+        Person personWithNewTags = new PersonBuilder().withName("Alice").withPhone(null).withEmail(null).withTags("colleagues").build();
         AddCommand addCommand = new AddCommand(personWithNewTags);
         ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
 
@@ -85,7 +85,7 @@ public class AddCommandTest {
     @Test
     public void execute_duplicatePersonWithDuplicateTags_addsOnlyNewTags() throws Exception {
         Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends", "colleagues").build();
-        Person personWithMixedTags = new PersonBuilder().withName("Alice").withTags("friends", "client").build();
+        Person personWithMixedTags = new PersonBuilder().withName("Alice").withPhone(null).withEmail(null).withTags("friends", "client").build();
         AddCommand addCommand = new AddCommand(personWithMixedTags);
         ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
 
@@ -101,6 +101,27 @@ public class AddCommandTest {
         assertTrue(updatedPerson.getTags().contains(new seedu.address.model.tag.Tag("friends")));
         assertTrue(updatedPerson.getTags().contains(new seedu.address.model.tag.Tag("colleagues")));
         assertTrue(updatedPerson.getTags().contains(new seedu.address.model.tag.Tag("client")));
+    }
+
+    @Test
+    public void execute_duplicatePersonWithPhoneAndEmail_showIgnoredFieldsWarning() throws Exception {
+        Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends").build();
+        Person personWithNewTags = new PersonBuilder()
+                .withName("Alice")
+                .withPhone("98765432")
+                .withEmail("test@example.com")
+                .withTags("colleagues")
+                .build();
+        AddCommand addCommand = new AddCommand(personWithNewTags);
+        ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
+
+        CommandResult commandResult = addCommand.execute(modelStub);
+
+        String expectedMessage = String.format(AddCommand.MESSAGE_TAGS_ADDED, Messages.format(modelStub.getPerson()))
+                + "\nNote: phone number p/ and email e/ field(s) were ignored. "
+                + "To change them, use the edit command.";
+        assertEquals(expectedMessage, commandResult.getFeedbackToUser());
+        assertTrue(modelStub.isPersonUpdated());
     }
 
     @Test
