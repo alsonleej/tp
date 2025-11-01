@@ -11,7 +11,7 @@ public class Name {
 
     public static final int MAX_NAME_LENGTH = 100;
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should only contain letters, spaces, apostrophes ('), hyphens (-), and slashes (/).\n"
+            "Names should not be blank and should only contain letters, spaces, apostrophes ('), hyphens (-), and slashes (/).\n"
             + "The name must start with a letter.\n"
             + "Examples: 'John Doe', 'Mary-Jane', 'O'Brien', 'Ahmad S/O Rahman'";
     public static final String MESSAGE_LENGTH_CONSTRAINT =

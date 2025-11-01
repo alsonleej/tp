@@ -679,7 +679,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Use case ends
 
  - 2c. Invalid name characters \
-    FirstImpressions throws error "Names should only contain alphabetic characters, spaces, apostrophes, hyphens, and slashes" \
+    FirstImpressions throws error "Names should not be blank and should only contain letters, spaces, apostrophes ('), hyphens (-), and slashes (/)." \
     Use case ends
 
  - 2d. Too many tags \
@@ -687,7 +687,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     Use case ends
 
  - 2e. Invalid tag \
-    FirstImpressions throws error "Tag contains invalid characters" \
+    FirstImpressions throws error "Tag names should not be blank and should only contain letters and numbers (no spaces or special characters)." \
     Use case ends
 
 
@@ -952,7 +952,7 @@ testers are expected to do more *exploratory* testing.
 4. **Adding a person with invalid data**
 
    1. Test case: `add n/ p/123 e/invalid-email`<br>
-      Expected: Error message "Names should only contain alphabetic characters, spaces, apostrophes, and hyphens"
+      Expected: Error message "Names should not be blank and should only contain letters, spaces, apostrophes ('), hyphens (-), and slashes (/)."
 
 ### Editing a person
 

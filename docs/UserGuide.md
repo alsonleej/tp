@@ -175,7 +175,7 @@ Adds a person to the contact list.
 Format: `add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`
 
 * Consecutive spaces in name are removed. e.g. "Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tan" will be saved as `Alice Tan`.
-* Names can contain letters, spaces, apostrophes, hyphens, and slashes. e.g. `s/o` (son of), `d/o` (daughter of).
+* Names should not be blank and can contain letters, spaces, apostrophes, hyphens, and slashes. e.g. `s/o` (son of), `d/o` (daughter of).
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Duplicate names are not allowed. Each person in the contact list must have a unique name. <br>
@@ -184,7 +184,7 @@ For example: 1-Alice Tan, 2-Alice Tan
 </div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
-Tags must contain only letters and numbers (no spaces, hyphens, or special characters)! <br>
+Tags should not be blank and must contain only letters and numbers (no spaces, hyphens, or special characters)! <br>
 Try using camelCase for multi-word tags! (e.g. `vipHandler`, instead of `vip-handler` or `vip handler`)
 </div>
 
@@ -212,7 +212,7 @@ Format: `add n/NAME t/TAG…​`
 
 * Consecutive spaces in name are removed. e.g. "Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tan" will be read as `Alice Tan`.
 * Multiple  tags can be added at once by prefixing each tag with `t/`.
-* Tags must contain only letters and numbers, without spaces.
+* Tags should not be blank and must contain only letters and numbers, without spaces.
 * If person does not already exist in FirstImpressions, the person is created.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:** <br>
