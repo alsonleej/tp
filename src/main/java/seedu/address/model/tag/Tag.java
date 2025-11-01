@@ -9,9 +9,12 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Tag {
 
+    public static final int MAX_TAG_LENGTH = 50;
     public static final String MESSAGE_CONSTRAINTS =
             "Tag names should not be blank and should only contain letters and numbers (no spaces or special characters).\n"
             + "Examples: 'VIP', 'friend', 'colleague2024'";
+    public static final String MESSAGE_LENGTH_CONSTRAINT =
+            "Tag name is too long! Please keep it to 50 characters or less.";
     public static final String VALIDATION_REGEX = "\\p{Alnum}+";
 
     public final String tagName;
@@ -24,6 +27,7 @@ public class Tag {
     public Tag(String tagName) {
         requireNonNull(tagName);
         checkArgument(isValidTagName(tagName), "Tag contains invalid characters: " + tagName);
+        checkArgument(tagName.length() <= MAX_TAG_LENGTH, MESSAGE_LENGTH_CONSTRAINT);
         this.tagName = tagName;
     }
 

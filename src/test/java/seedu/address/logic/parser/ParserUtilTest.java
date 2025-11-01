@@ -239,6 +239,32 @@ public class ParserUtilTest {
     }
 
     @Test
+    // BVA: tag length exactly 50 (valid)
+    public void parseTag_maxLength_returnsTag() throws Exception {
+        String fiftyAs = "a".repeat(50);
+        Tag expectedTag = new Tag(fiftyAs);
+        assertEquals(expectedTag, ParserUtil.parseTag(fiftyAs));
+    }
+
+    @Test
+    // BVA: tag length 51 (invalid)
+    public void parseTag_exceedsMaxLength_throwsParseException() {
+        // Test various lengths over 50 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(51))); // 51 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(52))); // 52 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(100))); // 100 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(200))); // 200 characters
+        
+        // Test with valid tag pattern (alphanumeric) but exceeding length
+        String longTagWithNumbers = "tag" + "1".repeat(49); // 52 characters with numbers
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag(longTagWithNumbers));
+        
+        // Test with mixed alphanumeric characters
+        String longTagMixed = "VIP" + "123".repeat(16); // 51 characters with mixed chars
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag(longTagMixed));
+    }
+
+    @Test
     // EP: null tags collection should throw NPE
     public void parseTags_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTags(null));

@@ -690,6 +690,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     FirstImpressions throws error "Tag names should not be blank and should only contain letters and numbers (no spaces or special characters)." \
     Use case ends
 
+ - 2f. Tag is too long \
+    FirstImpressions throws error "Tag name is too long! Please keep it to 50 characters or less." \
+    Use case ends
+
 
 #### **Use Case: Delete a Person**
 

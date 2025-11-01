@@ -192,7 +192,7 @@ Try using camelCase for multi-word tags! (e.g. `vipHandler`, instead of `vip-han
 * Names: Maximum 100 characters (must start with a letter) <br>
 * Phone: Maximum 50 characters. Can contain any characters (numbers, +, (), -, spaces, letters, etc.), but cannot be spaces only. <br>
 * Email: Must be a valid email format (username@domain.com) <br>
-* Tags: Letters and numbers only <br>
+* Tags: Maximum 50 characters. Letters and numbers only <br>
 </div>
 
 Examples:
