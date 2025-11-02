@@ -647,7 +647,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *`  | user                                       | delete a person                                      | remove a people when they exit the team                                |
 | `* * *`  | user                                       | delete a booking                                     | remove specific bookings that have been cancelled                      |
 | `* * *`  | user                                       | find a person by name                                | look up a team member's skillset and current bookings                  |
-| `* * *`  | user                                       | find a person by tag                                 | quickly filter out team memebers with suitable skills for a client     |
+| `* * *`  | user                                       | find a person by tag                                 | quickly filter out team members with suitable skills for a client     |
 | `* * *`  | user                                       | find a person by date                                | see which team members are available to take on a client               |
 | `* * *`  | user                                       | see all the different available team members         | I can see the options for what I need                                  |
 | `* *`    | user                                       | add descriptions to bookings                         | I can add context to assigned bookings                                 |
