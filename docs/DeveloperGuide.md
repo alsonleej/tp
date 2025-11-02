@@ -844,7 +844,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends
 
 - 2e. Invalid datetime value \
-  FirstImpressions throws error "\"[datetime]\" is not a valid datetime" (e.g., "\"2026-02-31 14:00\" is not a valid datetime" for invalid dates like February 31st) \
+  FirstImpressions throws error "Invalid datetime \"[formatted datetime]\", that datetime does not exist " (e.g., "Invalid datetime \"February 31st 2026 14:00\", that datetime does not exist " for invalid dates like February 31st) \
   Use case ends
 
 - 2f. Duplicate parameter \

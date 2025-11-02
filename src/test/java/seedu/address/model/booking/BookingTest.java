@@ -76,6 +76,28 @@ public class BookingTest {
     }
 
     @Test
+    public void parseDateTime_invalidHours_returnsNull() {
+        // Hours > 23 should return null
+        LocalDateTime result = Booking.parseDateTime("2026-12-20 24:00");
+        assertNull(result, "Hour 24 should return null");
+        result = Booking.parseDateTime("2026-12-20 25:00");
+        assertNull(result, "Hour 25 should return null");
+        result = Booking.parseDateTime("2026-12-20 99:00");
+        assertNull(result, "Hour 99 should return null");
+    }
+
+    @Test
+    public void parseDateTime_invalidMinutes_returnsNull() {
+        // Minutes > 59 should return null
+        LocalDateTime result = Booking.parseDateTime("2026-12-20 12:60");
+        assertNull(result, "Minute 60 should return null");
+        result = Booking.parseDateTime("2026-12-20 12:99");
+        assertNull(result, "Minute 99 should return null");
+        result = Booking.parseDateTime("2026-12-20 23:61");
+        assertNull(result, "Minute 61 should return null");
+    }
+
+    @Test
     public void isFutureDateTime_futureDate_returnsTrue() {
         // A date far in the future
         LocalDateTime futureDate = LocalDateTime.of(2099, 12, 31, 23, 59);
@@ -104,7 +126,7 @@ public class BookingTest {
         // Test that invalid dates return specific error messages
         String error = Booking.validateDateTime("2026-02-31 10:00");
         assertNotNull(error, "Invalid date should return error message");
-        assertEquals("\"2026-02-31 10:00\" is not a valid datetime", error);
+        assertEquals("Invalid datetime \"February 31st 2026 10:00\", that datetime does not exist ", error);
     }
 
     @Test
@@ -180,7 +202,7 @@ public class BookingTest {
         // Test that invalid month (e.g., month > 12) returns proper error message
         String error = Booking.validateDateTime("2026-13-01 10:00");
         assertNotNull(error, "Invalid month should return error message");
-        assertEquals("\"2026-13-01 10:00\" is not a valid datetime", error);
+        assertEquals("Invalid datetime \"Month 13 1st 2026 10:00\", that datetime does not exist ", error);
     }
 
     @Test
@@ -188,7 +210,31 @@ public class BookingTest {
         // Test date that matches format but cannot be parsed for day extraction
         String error = Booking.validateDateTime("2026-02-31 10:00");
         assertNotNull(error, "Invalid date should return error message");
-        assertEquals("\"2026-02-31 10:00\" is not a valid datetime", error);
+        assertEquals("Invalid datetime \"February 31st 2026 10:00\", that datetime does not exist ", error);
+    }
+
+    @Test
+    public void validateDateTime_invalidHours_returnsErrorMessage() {
+        // Test that invalid hours return error messages with time included
+        String error = Booking.validateDateTime("2026-12-20 24:00");
+        assertNotNull(error, "Invalid hour should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 24:00\", that datetime does not exist ", error);
+
+        error = Booking.validateDateTime("2026-12-20 25:00");
+        assertNotNull(error, "Invalid hour should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 25:00\", that datetime does not exist ", error);
+    }
+
+    @Test
+    public void validateDateTime_invalidMinutes_returnsErrorMessage() {
+        // Test that invalid minutes return error messages with time included
+        String error = Booking.validateDateTime("2026-12-20 12:99");
+        assertNotNull(error, "Invalid minute should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 12:99\", that datetime does not exist ", error);
+
+        error = Booking.validateDateTime("2026-12-20 12:60");
+        assertNotNull(error, "Invalid minute should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 12:60\", that datetime does not exist ", error);
     }
 
     @Test

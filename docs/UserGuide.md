@@ -423,7 +423,7 @@ You can resize the booking table columns by dragging the column borders. The Cli
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Dates must be valid calendar dates. <br>
-Invalid dates like `2026-02-31 14:00` will be rejected with: `"2026-02-31 14:00" is not a valid datetime`.
+Invalid dates like `2026-02-31 14:00` will be rejected with: `Invalid datetime "February 31st 2026 14:00", that datetime does not exist `.
 </div>
 
 Examples:

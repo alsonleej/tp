@@ -185,7 +185,7 @@ public class BookCommandParserTest {
         assertParseFailure(parser,
                 " " + PREFIX_DATETIME + "2025-02-31 14:00" + " " + PREFIX_CLIENT + clientName
                         + " " + PREFIX_NAME + personName,
-                "\"2025-02-31 14:00\" is not a valid datetime");
+                "Invalid datetime \"February 31st 2025 14:00\", that datetime does not exist ");
     }
 
     @Test
