@@ -1,4 +1,4 @@
----
+﻿---
 layout: page
 title: Developer Guide
 ---
@@ -618,34 +618,34 @@ The time format toggle mechanism allows users to switch between 24-hour and 12-h
 #### Usage Scenario
 
 1.  The user wants to switch from 24-hour to 12-hour format:
-    
+
     ```
     toggleTimeFormat 12h
     ```
-    
+
     Or to switch back to 24-hour format:
-    
+
     ```
     toggleTimeFormat 24h
     ```
-    
+
     The Logic component parses the command and calls:
-    
+
     ```
     model.setTimeFormat(TimeFormat.TWELVE_HOUR);
     ```
-    
+
     The **Model** updates the `UserPrefs` with the new format preference.
-    
+
     The **UI** component automatically refreshes all displayed booking times:
-    
+
     - **Before (24H):** `2025-09-20 14:30`
     - **After (12H):** `2025-09-20 2:30 PM`
-    
+
     The **Storage** component saves the preference to `preferences.json` for persistence across sessions.
 
 2.  The user views existing bookings:
-    
+
     - All booking times in the contact list automatically display in the selected format.
     - Command outputs (e.g., booking success messages) also use the selected format.
     - Input format for `book` and `reschedule` commands remains `YYYY-MM-DD HH:MM` (24-hour format) for consistency and clarity.
@@ -682,7 +682,7 @@ The time format toggle mechanism allows users to switch between 24-hour and 12-h
 
   - **Invalid format option:**
     Error: "Invalid time format. Use '24h' or '12h'."
-  
+
   - **Format already set:**
     Message: "Time format is already set to 12-hour format." (informational, not an error)
 
