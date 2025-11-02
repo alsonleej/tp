@@ -9,6 +9,7 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
  */
 public class Email {
 
+    public static final int MAX_EMAIL_LENGTH = 50;
     private static final String SPECIAL_CHARACTERS = "+_.-";
     public static final String MESSAGE_CONSTRAINTS =
             "Email addresses should follow the format: username@domain.com\n"
@@ -20,6 +21,8 @@ public class Email {
             + "(at least 2 characters).\n"
             + "  Each part can contain letters, numbers, and hyphens (but not at the start or end).\n"
             + "Examples: 'john.doe@example.com', 'user+tag@mail.co.uk', 'alice_2024@company-name.org'";
+    public static final String MESSAGE_LENGTH_CONSTRAINT =
+            "Email address is too long! Please keep it to 50 characters or less.";
     // alphanumeric and special characters
     private static final String ALPHANUMERIC_NO_UNDERSCORE = "[^\\W_]+"; // alphanumeric characters except underscore
     private static final String LOCAL_PART_REGEX = "^" + ALPHANUMERIC_NO_UNDERSCORE + "([" + SPECIAL_CHARACTERS + "]"
@@ -40,6 +43,7 @@ public class Email {
     public Email(String email) {
         requireNonNull(email);
         checkArgument(isValidEmail(email), MESSAGE_CONSTRAINTS);
+        checkArgument(email.length() <= MAX_EMAIL_LENGTH, MESSAGE_LENGTH_CONSTRAINT);
         value = email;
     }
 

@@ -212,6 +212,32 @@ public class ParserUtilTest {
     }
 
     @Test
+    // BVA: email length exactly 50 (valid)
+    public void parseEmail_maxLength_returnsEmail() throws Exception {
+        String fiftyCharEmail = "a".repeat(44) + "@b.co"; // exactly 50 chars
+        Email expectedEmail = new Email(fiftyCharEmail);
+        assertEquals(expectedEmail, ParserUtil.parseEmail(fiftyCharEmail));
+    }
+
+    @Test
+    // BVA: email length 51 (invalid)
+    public void parseEmail_exceedsMaxLength_throwsParseException() {
+        // Test various lengths over 50 characters with valid email format
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail("a".repeat(43) + "@example.com")); // 55 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail("user" + "1".repeat(40) + "@example.com")); // 56 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail("a".repeat(92) + "@example.com")); // 104 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail("a".repeat(192) + "@example.com")); // 204 characters
+        
+        // Test with valid email pattern but exceeding length - long local part
+        String longEmailLocal = "user" + "1".repeat(41) + "@example.com"; // 61 characters with valid format
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(longEmailLocal));
+        
+        // Test with valid email pattern but exceeding length - long domain
+        String longEmailDomain = "user@" + "example".repeat(7) + ".com"; // 57 characters with long domain
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(longEmailDomain));
+    }
+
+    @Test
     // EP: null tag should throw NPE
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));

@@ -99,6 +99,9 @@ public class ParserUtil {
         if (!Email.isValidEmail(trimmedEmail)) {
             throw new ParseException(Email.MESSAGE_CONSTRAINTS);
         }
+        if (trimmedEmail.length() > Email.MAX_EMAIL_LENGTH) {
+            throw new ParseException(Email.MESSAGE_LENGTH_CONSTRAINT);
+        }
         return new Email(trimmedEmail);
     }
 
@@ -114,6 +117,7 @@ public class ParserUtil {
         if (!Tag.isValidTagName(trimmedTag)) {
             throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
         }
+
         if (trimmedTag.length() > Tag.MAX_TAG_LENGTH) {
             throw new ParseException(Tag.MESSAGE_LENGTH_CONSTRAINT);
         }

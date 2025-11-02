@@ -694,6 +694,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     FirstImpressions throws error "Tag name is too long! Please keep it to 50 characters or less." \
     Use case ends
 
+ - 2g. Email is too long \
+    FirstImpressions throws error "Email address is too long! Please keep it to 50 characters or less." \
+    Use case ends
+
 
 #### **Use Case: Delete a Person**
 
