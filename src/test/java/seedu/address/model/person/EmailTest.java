@@ -23,15 +23,19 @@ public class EmailTest {
     public void constructor_emailTooLong_throwsIllegalArgumentException() {
         // Test various lengths over 50 characters with valid email format
         // Format: alphanumeric local part @ domain with at least 2 chars
-        assertThrows(IllegalArgumentException.class, () -> new Email("a".repeat(43) + "@example.com")); // 55 characters
-        assertThrows(IllegalArgumentException.class, () -> new Email("user" + "1".repeat(40) + "@example.com")); // 56 characters
-        assertThrows(IllegalArgumentException.class, () -> new Email("a".repeat(92) + "@example.com")); // 104 characters
-        assertThrows(IllegalArgumentException.class, () -> new Email("a".repeat(192) + "@example.com")); // 204 characters
-        
+        assertThrows(IllegalArgumentException.class, () -> new Email(
+                "a".repeat(43) + "@example.com")); // 55 characters
+        assertThrows(IllegalArgumentException.class, () -> new Email(
+                "user" + "1".repeat(40) + "@example.com")); // 56 characters
+        assertThrows(IllegalArgumentException.class, () -> new Email(
+                "a".repeat(92) + "@example.com")); // 104 characters
+        assertThrows(IllegalArgumentException.class, () -> new Email(
+                "a".repeat(192) + "@example.com")); // 204 characters
+
         // Test with valid email pattern but exceeding length - long local part
         String longEmailLocal = "user" + "1".repeat(41) + "@example.com"; // 61 characters with valid format
         assertThrows(IllegalArgumentException.class, () -> new Email(longEmailLocal));
-        
+
         // Test with valid email pattern but exceeding length - long domain
         String longEmailDomain = "user@" + "example".repeat(7) + ".com"; // 57 characters with long domain
         assertThrows(IllegalArgumentException.class, () -> new Email(longEmailDomain));

@@ -10,12 +10,10 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Email {
 
     public static final int MAX_EMAIL_LENGTH = 50;
-    private static final String SPECIAL_CHARACTERS = "+_.-";
     public static final String MESSAGE_CONSTRAINTS =
             "Email addresses should follow the format: username@domain.com\n"
             + "Requirements:\n"
-            + "• Username (before @): Letters, numbers, and special characters ("
-            + SPECIAL_CHARACTERS + ") are allowed.\n"
+            + "• Username (before @): Letters, numbers, and special characters (+_.-) are allowed.\n"
             + "  Cannot start or end with special characters.\n"
             + "• Domain (after @): Must have at least one period (.) and end with a valid extension "
             + "(at least 2 characters).\n"
@@ -23,6 +21,7 @@ public class Email {
             + "Examples: 'john.doe@example.com', 'user+tag@mail.co.uk', 'alice_2024@company-name.org'";
     public static final String MESSAGE_LENGTH_CONSTRAINT =
             "Email address is too long! Please keep it to 50 characters or less.";
+    private static final String SPECIAL_CHARACTERS = "+_.-";
     // alphanumeric and special characters
     private static final String ALPHANUMERIC_NO_UNDERSCORE = "[^\\W_]+"; // alphanumeric characters except underscore
     private static final String LOCAL_PART_REGEX = "^" + ALPHANUMERIC_NO_UNDERSCORE + "([" + SPECIAL_CHARACTERS + "]"

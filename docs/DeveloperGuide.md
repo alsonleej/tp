@@ -938,7 +938,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends.
 
 - **1b.** Invalid date format provided. \
-  FirstImpressions displays an error: "Invalid date!" \
+  FirstImpressions displays an error: "Invalid date! Expected format: YYYY-MM-DD (e.g., 2025-10-20)" \
   Use case ends.
 
 - **3a.** No persons match the search criteria. \

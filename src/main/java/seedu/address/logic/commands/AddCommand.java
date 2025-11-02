@@ -104,12 +104,12 @@ public class AddCommand extends Command {
                     );
 
                     model.setPerson(existingPerson, updatedPerson);
-                    
+
                     // Check if phone or email were provided but ignored
                     boolean hasPhone = toAdd.getPhone() != null;
                     boolean hasEmail = toAdd.getEmail() != null;
                     String message = String.format(MESSAGE_TAGS_ADDED, Messages.format(updatedPerson));
-                    
+
                     if (hasPhone || hasEmail) {
                         StringBuilder ignoredFields = new StringBuilder();
                         if (hasPhone) {
@@ -124,7 +124,7 @@ public class AddCommand extends Command {
                         message += "\nNote: " + ignoredFields.toString() + " field(s) were ignored. "
                                 + "To change them, use the edit command.";
                     }
-                    
+
                     return new CommandResult(message);
                 }
             }

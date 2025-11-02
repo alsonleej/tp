@@ -30,11 +30,11 @@ public class TagTest {
         assertThrows(IllegalArgumentException.class, () -> new Tag("a".repeat(52))); // 52 characters
         assertThrows(IllegalArgumentException.class, () -> new Tag("a".repeat(100))); // 100 characters
         assertThrows(IllegalArgumentException.class, () -> new Tag("a".repeat(200))); // 200 characters
-        
+
         // Test with valid tag pattern (alphanumeric) but exceeding length
         String longTagWithNumbers = "tag" + "1".repeat(49); // 52 characters with numbers
         assertThrows(IllegalArgumentException.class, () -> new Tag(longTagWithNumbers));
-        
+
         // Test with mixed alphanumeric characters
         String longTagMixed = "VIP" + "123".repeat(16); // 51 characters with mixed chars
         assertThrows(IllegalArgumentException.class, () -> new Tag(longTagMixed));

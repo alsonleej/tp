@@ -47,7 +47,8 @@ public class AddCommandTest {
     @Test
     public void execute_duplicatePerson_addsTagsToExistingPerson() throws Exception {
         Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends").build();
-        Person personWithNewTags = new PersonBuilder().withName("Alice").withPhone(null).withEmail(null).withTags("colleagues").build();
+        Person personWithNewTags = new PersonBuilder().withName("Alice").withPhone(null)
+                .withEmail(null).withTags("colleagues").build();
         AddCommand addCommand = new AddCommand(personWithNewTags);
         ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
 
@@ -71,7 +72,8 @@ public class AddCommandTest {
     @Test
     public void execute_duplicatePersonWithTags_addsTagsSuccessfully() throws Exception {
         Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends").build();
-        Person personWithNewTags = new PersonBuilder().withName("Alice").withPhone(null).withEmail(null).withTags("colleagues").build();
+        Person personWithNewTags = new PersonBuilder().withName("Alice").withPhone(null)
+                .withEmail(null).withTags("colleagues").build();
         AddCommand addCommand = new AddCommand(personWithNewTags);
         ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
 
@@ -85,7 +87,8 @@ public class AddCommandTest {
     @Test
     public void execute_duplicatePersonWithDuplicateTags_addsOnlyNewTags() throws Exception {
         Person existingPerson = new PersonBuilder().withName("Alice").withTags("friends", "colleagues").build();
-        Person personWithMixedTags = new PersonBuilder().withName("Alice").withPhone(null).withEmail(null).withTags("friends", "client").build();
+        Person personWithMixedTags = new PersonBuilder().withName("Alice").withPhone(null)
+                .withEmail(null).withTags("friends", "client").build();
         AddCommand addCommand = new AddCommand(personWithMixedTags);
         ModelStubWithPerson modelStub = new ModelStubWithPerson(existingPerson);
 

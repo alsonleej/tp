@@ -11,7 +11,8 @@ public class Tag {
 
     public static final int MAX_TAG_LENGTH = 50;
     public static final String MESSAGE_CONSTRAINTS =
-            "Tag names should not be blank and should only contain letters and numbers (no spaces or special characters).\n"
+            "Tag names should not be blank and should only contain letters and numbers "
+            + "(no spaces or special characters).\n"
             + "Examples: 'VIP', 'friend', 'colleague2024'";
     public static final String MESSAGE_LENGTH_CONSTRAINT =
             "Tag name is too long! Please keep it to 50 characters or less.";

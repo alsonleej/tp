@@ -26,7 +26,7 @@ public class PhoneTest {
         assertThrows(IllegalArgumentException.class, () -> new Phone("1".repeat(52))); // 52 characters
         assertThrows(IllegalArgumentException.class, () -> new Phone("1".repeat(100))); // 100 characters
         assertThrows(IllegalArgumentException.class, () -> new Phone("1".repeat(200))); // 200 characters
-        
+
         // Test with valid phone pattern but exceeding length
         String longPhoneWithFormat = "+65 " + "1".repeat(48); // 51 characters with format
         assertThrows(IllegalArgumentException.class, () -> new Phone(longPhoneWithFormat));
@@ -61,7 +61,7 @@ public class PhoneTest {
         assertTrue(Phone.isValidPhone("ext. 123")); // extension format
         assertTrue(Phone.isValidPhone("#1234")); // hash symbol
         assertTrue(Phone.isValidPhone("123 ext 456")); // extension with text
-        
+
         // valid phone numbers - at maximum length
         assertTrue(Phone.isValidPhone("1".repeat(50))); // exactly 50 chars (max length)
     }

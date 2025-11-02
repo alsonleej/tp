@@ -27,7 +27,7 @@ public class NameTest {
         assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(150))); // 150 characters
         assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(200))); // 200 characters
         assertThrows(IllegalArgumentException.class, () -> new Name("a".repeat(1000))); // 1000 characters
-        
+
         // Test with valid name pattern but exceeding length
         String longNameWithSpecialChars = "Alice" + "-".repeat(96); // 101 characters with hyphens
         assertThrows(IllegalArgumentException.class, () -> new Name(longNameWithSpecialChars));
