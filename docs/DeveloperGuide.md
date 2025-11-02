@@ -22,6 +22,7 @@ title: Developer Guide
   * [[Proposed] Edit Booking Clients/Description](#proposed-edit-booking-clientsdescription)
   * [[Proposed] Timezone Support](#proposed-timezone-support)
   * [[Proposed] Find Booking](#proposed-find-booking)
+  * [[Proposed] Toggle Between 24H to 12H Time](#proposed-toggle-between-24h-to-12h-time)
 * [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 * [Appendix: Requirements](#appendix-requirements)
   * [Product scope](#product-scope)
@@ -598,6 +599,92 @@ Highlights relevant bookings to users searching by client name using `find`.
 
  - **Person not found:**
     Error: "No searches matching the input name found"
+
+---
+
+### \[Proposed\] Toggle Between 24H to 12H Time
+
+#### Proposed Implementation
+
+The time format toggle mechanism allows users to switch between 24-hour and 12-hour (AM/PM) time formats for displaying booking times throughout the application. This provides flexibility for users who prefer different time representations.
+
+**Operations:**
+
+  - `UserPrefs#setTimeFormat(TimeFormat format)` — Sets the user's preferred time format (24H or 12H).
+  - `TimeFormat#format(LocalDateTime dateTime)` — Formats a datetime according to the current preference.
+  - `UI#updateBookingDisplays()` — Updates all booking time displays when format changes.
+  - `Model#getTimeFormat()` — Retrieves the current time format preference.
+
+#### Usage Scenario
+
+1.  The user wants to switch from 24-hour to 12-hour format:
+    
+    ```
+    toggleTimeFormat 12h
+    ```
+    
+    Or to switch back to 24-hour format:
+    
+    ```
+    toggleTimeFormat 24h
+    ```
+    
+    The Logic component parses the command and calls:
+    
+    ```
+    model.setTimeFormat(TimeFormat.TWELVE_HOUR);
+    ```
+    
+    The **Model** updates the `UserPrefs` with the new format preference.
+    
+    The **UI** component automatically refreshes all displayed booking times:
+    
+    - **Before (24H):** `2025-09-20 14:30`
+    - **After (12H):** `2025-09-20 2:30 PM`
+    
+    The **Storage** component saves the preference to `preferences.json` for persistence across sessions.
+
+2.  The user views existing bookings:
+    
+    - All booking times in the contact list automatically display in the selected format.
+    - Command outputs (e.g., booking success messages) also use the selected format.
+    - Input format for `book` and `reschedule` commands remains `YYYY-MM-DD HH:MM` (24-hour format) for consistency and clarity.
+
+#### Design Considerations
+
+**Format Storage:**
+  - Store the time format preference in `UserPrefs`.
+  - Persist the preference to `preferences.json` for future sessions.
+  - Default to 24-hour format for new users (matches current input format).
+
+**Display Consistency:**
+  - All datetime displays throughout the application should respect the user's preference.
+  - Booking list, command results, and any UI components showing times should use the selected format.
+  - Input parsing remains unchanged to maintain command consistency.
+
+**Format Conversion:**
+  - Use Java's `DateTimeFormatter` to handle conversion between formats.
+  - Ensure proper AM/PM indicators for 12-hour format.
+  - Handle edge cases (midnight, noon) correctly:
+    - Midnight (00:00) → `12:00 AM`
+    - Noon (12:00) → `12:00 PM`
+    - Afternoon times (13:00-23:59) → `1:00 PM` - `11:59 PM`
+
+**UI Updates:**
+  - Implement observer pattern or event system to notify UI components when format changes.
+  - Update all visible booking displays immediately after format toggle.
+
+**Backward Compatibility:**
+  - Existing bookings stored in the database remain unchanged (still stored as `LocalDateTime`).
+  - Only the display format changes, not the underlying data.
+
+#### Extensions / Error Cases
+
+  - **Invalid format option:**
+    Error: "Invalid time format. Use '24h' or '12h'."
+  
+  - **Format already set:**
+    Message: "Time format is already set to 12-hour format." (informational, not an error)
 
 
 --------------------------------------------------------------------------------------------------------------------

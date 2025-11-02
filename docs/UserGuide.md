@@ -404,6 +404,10 @@ Additionally, past bookings will appear greyed out (with reduced opacity) in the
 The bookings are sorted with future bookings at the top (in chronological order) and past bookings at the bottom (also in chronological order).
 </div>
 
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+You can resize the booking table columns by dragging the column borders. The Client column can be resized freely to accommodate longer client names.
+</div>
+
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Dates must be valid calendar dates. <br>
 Invalid dates like `2026-02-31 14:00` will be rejected with: `"2026-02-31 14:00" is not a valid datetime`.
