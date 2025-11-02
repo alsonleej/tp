@@ -183,7 +183,13 @@ Adds a person to the contact list.
 Format: `add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`
 
 * Consecutive spaces in name are removed. e.g. "Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tan" will be saved as `Alice Tan`.
-* Names should not be blank and can contain letters, spaces, apostrophes, hyphens, and slashes. e.g. `s/o` (son of), `d/o` (daughter of).
+* Names should not be blank and can contain any characters (letters, numbers, spaces, special characters, etc.).
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
+Field delimiters (like `p/`, `t/`, `e/`, `n/`) with a space before them will be treated as separate fields, even if they appear in a name. <br>
+For example, `add n/Bob t/Lee` will be interpreted as name "Bob" with tag "Lee", not as name "Bob t/Lee". <br>
+To include text like "t/" in a name, avoid having a space before the delimiter (e.g., use `Bobt/Lee` or `Bob-t/Lee`).
+</div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Duplicate names are not allowed. Each person in the contact list must have a unique name. <br>
@@ -197,7 +203,7 @@ Try using camelCase for multi-word tags! (e.g. `vipHandler`, instead of `vip-han
 </div>
 
 <div markdown="span" class="alert alert-info">:information_source: **Character Limits:** <br>
-* Names: Maximum 100 characters (must start with a letter) <br>
+* Names: Maximum 100 characters <br>
 * Phone: Maximum 50 characters. Can contain any characters (numbers, +, (), -, spaces, letters, etc.), but cannot be spaces only. <br>
 * Email: Maximum 50 characters. Must be a valid email format (username@domain.com) <br>
 * Tags: Maximum 50 characters. Letters and numbers only <br>
@@ -399,7 +405,7 @@ Assigns a client meeting to a person at a given date and time, with an optional 
 Format: `book dt/DATETIME c/CLIENT_NAME n/PERSON_NAME [desc/DESCRIPTION]`
 
 * Name of person provided must be in the current contact list.
-* Client name can contain letters, numbers, spaces, apostrophes, hyphens, periods, and slashes. e.g. `s/o` (son of), `d/o` (daughter of). Must be 1-100 characters and contain at least one letter.
+* Client name should not be blank and can contain any characters (letters, numbers, spaces, special characters, etc.). Must be 100 characters or less.
 * Datetime must be in `YYYY-MM-DD HH:MM` format in 24-hour notation.
 * The keyword (delimiter) here is `dt/` as it includes both date and time.
 

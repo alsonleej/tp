@@ -472,7 +472,7 @@ The edit booking mechanism allows users to update the client name or description
     Error: "At least one field (client name or description) must be provided for update"
 
   - **Invalid client name:**
-    Error: "Invalid client name format"
+    Error: "Client name should not be blank and must be 100 characters or less."
 
   - **Invalid description:**
     Error: "Invalid description format"
@@ -765,9 +765,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     FirstImpressions throws error "Name too long" \
     Use case ends
 
- - 2c. Invalid name characters \
-    FirstImpressions throws error "Names should not be blank and should only contain letters, spaces, apostrophes ('), hyphens (-), and slashes (/)." \
-    Use case ends
+ - 2c. Invalid name (blank/empty) \
+  FirstImpressions throws error "Names should not be blank and must be 100 characters or less." \
+  Use case ends
 
  - 2d. Too many tags \
     FirstImpressions throws error "Remove existing tag before adding new one" \
@@ -835,8 +835,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   FirstImpressions throws error "Booking requires datetime, client, team member, and description." \
   Use case ends
 
-- 2c. Invalid client name \
-  FirstImpressions throws error "Invalid client name. Must be 1-100 characters with at least one letter. Only letters, numbers, spaces, hyphens, apostrophes, periods, and slashes are allowed." \
+- 2c. Invalid client name (blank/too long) \
+  FirstImpressions throws error "Client name should not be blank and must be 100 characters or less." \
   Use case ends
 
 - 2d. Invalid datetime format \
@@ -1047,7 +1047,7 @@ testers are expected to do more *exploratory* testing.
 4. **Adding a person with invalid data**
 
    1. Test case: `add n/ p/123 e/invalid-email`<br>
-      Expected: Error message "Names should not be blank and should only contain letters, spaces, apostrophes ('), hyphens (-), and slashes (/)."
+      Expected: Error message "Names should not be blank and must be 100 characters or less."
 
 ### Editing a person
 

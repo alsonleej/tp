@@ -21,7 +21,7 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
-    private static final String INVALID_NAME = "R@chel";
+    private static final String INVALID_NAME = ""; // empty string (names must be non-blank)
     private static final String INVALID_PHONE = " ";
     private static final String INVALID_ADDRESS = " ";
     private static final String INVALID_EMAIL = "example.com";
@@ -66,7 +66,7 @@ public class ParserUtilTest {
     }
 
     @Test
-    // EP: invalid name characters
+    // EP: invalid name (blank/empty)
     public void parseName_invalidValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseName(INVALID_NAME));
     }
@@ -106,6 +106,23 @@ public class ParserUtilTest {
         String nameWithWhitespace = WHITESPACE + VALID_NAME + WHITESPACE;
         Name expectedName = new Name(VALID_NAME);
         assertEquals(expectedName, ParserUtil.parseName(nameWithWhitespace));
+    }
+
+    @Test
+    // EP: valid name with special characters (previously invalid, now valid)
+    public void parseName_validValueWithSpecialCharacters_returnsName() throws Exception {
+        // Test names with various special characters that were previously invalid
+        Name name1 = ParserUtil.parseName("R@chel");
+        assertEquals(new Name("R@chel"), name1);
+
+        Name name2 = ParserUtil.parseName("James&");
+        assertEquals(new Name("James&"), name2);
+
+        Name name3 = ParserUtil.parseName("John*Smith");
+        assertEquals(new Name("John*Smith"), name3);
+
+        Name name4 = ParserUtil.parseName("Bob#123");
+        assertEquals(new Name("Bob#123"), name4);
     }
 
     @Test

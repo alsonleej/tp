@@ -108,17 +108,35 @@ public class BookCommandParserTest {
     @Test
     public void parse_clientNameWithSpecialCharacters_success() {
         String personName = "Alice Tan";
-        String clientName = "O'Brien-Smith"; // Special characters allowed
         String datetime = "2025-12-25 14:00";
-
         LocalDateTime expectedDateTime = LocalDateTime.of(2025, 12, 25, 14, 0);
-        BookCommand expectedCommand = new BookCommand(new Name(personName), clientName,
-                expectedDateTime, "No description provided");
 
+        // Test with apostrophe and hyphen (previously allowed)
+        String clientName1 = "O'Brien-Smith";
+        BookCommand expectedCommand1 = new BookCommand(new Name(personName), clientName1,
+                expectedDateTime, "No description provided");
         assertParseSuccess(parser,
-                " " + PREFIX_DATETIME + datetime + " " + PREFIX_CLIENT + clientName
+                " " + PREFIX_DATETIME + datetime + " " + PREFIX_CLIENT + clientName1
                         + " " + PREFIX_NAME + personName,
-                expectedCommand);
+                expectedCommand1);
+
+        // Test with @ symbol (previously invalid, now valid)
+        String clientName2 = "John@Doe";
+        BookCommand expectedCommand2 = new BookCommand(new Name(personName), clientName2,
+                expectedDateTime, "No description provided");
+        assertParseSuccess(parser,
+                " " + PREFIX_DATETIME + datetime + " " + PREFIX_CLIENT + clientName2
+                        + " " + PREFIX_NAME + personName,
+                expectedCommand2);
+
+        // Test with & symbol (previously invalid, now valid)
+        String clientName3 = "Bob&Company";
+        BookCommand expectedCommand3 = new BookCommand(new Name(personName), clientName3,
+                expectedDateTime, "No description provided");
+        assertParseSuccess(parser,
+                " " + PREFIX_DATETIME + datetime + " " + PREFIX_CLIENT + clientName3
+                        + " " + PREFIX_NAME + personName,
+                expectedCommand3);
     }
 
     @Test
@@ -135,12 +153,6 @@ public class BookCommandParserTest {
         // Client name with only spaces
         assertParseFailure(parser,
                 " " + PREFIX_DATETIME + datetime + " " + PREFIX_CLIENT + "   "
-                        + " " + PREFIX_NAME + personName,
-                Booking.MESSAGE_CONSTRAINTS_CLIENT);
-
-        // Client name with only special characters
-        assertParseFailure(parser,
-                " " + PREFIX_DATETIME + datetime + " " + PREFIX_CLIENT + "!!!"
                         + " " + PREFIX_NAME + personName,
                 Booking.MESSAGE_CONSTRAINTS_CLIENT);
     }

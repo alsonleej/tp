@@ -11,18 +11,14 @@ public class Name {
 
     public static final int MAX_NAME_LENGTH = 100;
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should not be blank and should only contain letters, spaces, apostrophes ('), "
-            + "hyphens (-), and slashes (/).\n"
-            + "The name must start with a letter.\n"
-            + "Examples: 'John Doe', 'Mary-Jane', 'O'Brien', 'Ahmad S/O Rahman'";
+            "Names should not be blank and must be 100 characters or less.";
     public static final String MESSAGE_LENGTH_CONSTRAINT =
             "Name is too long! Please keep it to 100 characters or less.";
 
     /*
-     * The first character must be alphabetic.
-     * Subsequent characters can be alphabetic, spaces, apostrophes, hyphens, forward slashes, or backslashes.
+     * Name can contain any characters as long as it is non-blank.
      */
-    public static final String VALIDATION_REGEX = "[a-zA-Z][a-zA-Z' \\\\/-]*";
+    private static final String VALIDATION_REGEX = ".+";
 
     public final String fullName;
 
@@ -42,7 +38,7 @@ public class Name {
      * Returns true if a given string is a valid name.
      */
     public static boolean isValidName(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return test.matches(VALIDATION_REGEX) && test.trim().length() > 0;
     }
 
 

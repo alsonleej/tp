@@ -153,14 +153,11 @@ public class BookingTest {
 
     @Test
     public void isValidClientName() {
-        // invalid client names
+        // invalid client names (blank/empty)
         assertFalse(Booking.isValidClientName("")); // empty string
         assertFalse(Booking.isValidClientName(" ")); // spaces only
-        assertFalse(Booking.isValidClientName("!")); // only invalid characters
-        assertFalse(Booking.isValidClientName("John@Doe")); // contains invalid character
-        assertFalse(Booking.isValidClientName("".repeat(101))); // too long (101 characters)
 
-        // valid client names
+        // valid client names (can contain any characters, including special characters and numbers)
         assertTrue(Booking.isValidClientName("John Doe")); // alphabets only
         assertTrue(Booking.isValidClientName("John O'Brien")); // with apostrophe
         assertTrue(Booking.isValidClientName("Mary-Jane")); // with hyphen
@@ -168,6 +165,10 @@ public class BookingTest {
         assertTrue(Booking.isValidClientName("Abhijay s/o Abhi")); // with forward slash
         assertTrue(Booking.isValidClientName("John\\Doe")); // with backslash
         assertTrue(Booking.isValidClientName("Jean-Paul O'Connor/Smith")); // with all special chars
+        assertTrue(Booking.isValidClientName("!")); // special characters only
+        assertTrue(Booking.isValidClientName("John@Doe")); // contains @ symbol (previously invalid)
+        assertTrue(Booking.isValidClientName("Bob#123")); // contains # and numbers
+        assertTrue(Booking.isValidClientName("12345")); // numbers only
         assertTrue(Booking.isValidClientName("a".repeat(100))); // exactly 100 chars (max length)
     }
 
@@ -180,6 +181,25 @@ public class BookingTest {
 
         Booking booking = new Booking(clientName, datetime, description);
         assertEquals(clientName, booking.getClientName());
+    }
+
+    @Test
+    public void constructor_clientNameWithSpecialCharacters_success() {
+        // Test that bookings can be created with special characters in client name (previously invalid)
+        LocalDateTime datetime = LocalDateTime.of(2026, 12, 25, 10, 0);
+        String description = "Consultation";
+
+        // Test with @ symbol
+        Booking booking1 = new Booking("John@Doe", datetime, description);
+        assertEquals("John@Doe", booking1.getClientName());
+
+        // Test with & symbol
+        Booking booking2 = new Booking("Bob&Company", datetime, description);
+        assertEquals("Bob&Company", booking2.getClientName());
+
+        // Test with # and numbers
+        Booking booking3 = new Booking("Client#123", datetime, description);
+        assertEquals("Client#123", booking3.getClientName());
     }
 
     @Test

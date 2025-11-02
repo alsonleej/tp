@@ -184,4 +184,35 @@ public class AddCommandIntegrationTest {
                 expectedModel);
     }
 
+    @Test
+    public void execute_newPersonWithSpecialCharactersInName_addsPersonSuccessfully() {
+        // Test that names with special characters (previously invalid) can be added
+        Person personWithSpecialChars = new PersonBuilder()
+                .withName("R@chel")
+                .withPhone("81234567")
+                .withEmail("rachel@example.com")
+                .withTags("friend")
+                .build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personWithSpecialChars);
+
+        assertCommandSuccess(new AddCommand(personWithSpecialChars), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithSpecialChars)),
+                expectedModel);
+
+        // Test another person with different special characters
+        Person personWithAmpersand = new PersonBuilder()
+                .withName("James&")
+                .withPhone("91234567")
+                .withEmail("james@example.com")
+                .build();
+
+        expectedModel.addPerson(personWithAmpersand);
+
+        assertCommandSuccess(new AddCommand(personWithAmpersand), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithAmpersand)),
+                expectedModel);
+    }
+
 }
