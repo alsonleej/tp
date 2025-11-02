@@ -670,7 +670,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. FirstImpressions adds person to the list
 4. Use case ends
 
-<img src="images/add-DG.png" alt="add person" width="700">
 
 **Extensions**
 
@@ -707,7 +706,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. FirstImpressions deletes person in the list
 4. Use case ends
 
-<img src="images/delete-DG.png" alt="delete person" width="700">
 
 **Extensions**
 
@@ -732,7 +730,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. FirstImpressions adds booking to team member
 4. Use case ends
 
-<img src="images/book-DG.png" alt="book person" width="700">
 
 **Extensions**
 
@@ -853,7 +850,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 - **3b.** Valid prefix provided but no parameter (e.g., `find d/`). \
   FirstImpressions lists all persons. Use case continues as in the main scenario. <br>
 
-<img src="images/find-DG.png" width="400px" alt="find person">
 
 ---
 
@@ -868,9 +864,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 2. FirstImpressions shows pop-up menu with all command usage
 3. Use case ends
 
-<img src="images/help-DG.png" alt="help" width="700">
-
-
+---
 
 ### Non-Functional Requirements
 
