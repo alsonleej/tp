@@ -125,8 +125,8 @@ public class Booking {
                         int day = Integer.parseInt(parts[2]);
                         String monthName = getMonthName(month);
                         String dayOrdinal = getDayOrdinal(day);
-                        return String.format("Invalid datetime \"%s %s %d %s\", that datetime does not exist "
-                                , monthName, dayOrdinal, year, timePart);
+                        return String.format("Invalid datetime \"%s %s %d %s\", that datetime does not exist ",
+                                monthName, dayOrdinal, year, timePart);
                     } catch (NumberFormatException e) {
                         return MESSAGE_CONSTRAINTS_DATETIME;
                     }
