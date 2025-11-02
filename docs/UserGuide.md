@@ -7,23 +7,31 @@ title: User Guide
 
 ## Table of Contents
 
-* [Introduction](#introduction)
-* [Quick start](#quick-start)
-* [Features](#features)
-  * [Viewing help : `help`](#viewing-help--help)
-  * [Adding a person: `add`](#adding-a-person-add)
-  * [Adding a tag to an existing person: `add`](#adding-a-tag-to-an-existing-person-add)
-  * [Listing all persons : `list`](#listing-all-persons--list)
-  * [Editing a person : `edit`](#editing-a-person--edit)
-  * [Locating team members by name: `find`](#locating-team-members-by-name-find)
-  * [Deleting a person : `delete`](#deleting-a-person--delete)
-  * [Clearing all entries : `clear`](#clearing-all-entries--clear)
-  * [Assigning a booking : `book`](#assigning-a-booking--book)
-  * [Exiting the program : `exit`](#exiting-the-program--exit)
-* [Data Management](#data-management)
-* [FAQ](#faq)
-* [Known Issues](#known-issues)
-* [Command Summary](#command-summary)
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
+  - [Target Users](#target-users)
+  - [User Proficiency Level](#user-proficiency-level)
+  - [What FirstImpressions Does](#what-firstimpressions-does)
+- [Quick start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Installation Steps](#installation-steps)
+- [Features](#features)
+  - [Viewing help : `help`](#viewing-help--help)
+  - [Adding a person: `add`](#adding-a-person-add)
+  - [Adding a tag to an existing person: `add`](#adding-a-tag-to-an-existing-person-add)
+  - [Listing all persons : `list`](#listing-all-persons--list)
+  - [Editing a person : `edit`](#editing-a-person--edit)
+  - [Locating team members by name: `find`](#locating-team-members-by-name-find)
+  - [Deleting a person : `delete`](#deleting-a-person--delete)
+  - [Clearing all entries : `clear`](#clearing-all-entries--clear)
+  - [Assigning a booking : `book`](#assigning-a-booking--book)
+  - [Exiting the program : `exit`](#exiting-the-program--exit)
+- [Data Management](#data-management)
+  - [Saving the data](#saving-the-data)
+  - [Editing the data file](#editing-the-data-file)
+- [FAQ](#faq)
+- [Known Issues](#known-issues)
+- [Command Summary](#command-summary)
 
 </div>
 
@@ -285,6 +293,7 @@ If multiple tags are being searched for, each parameter must have its own `t/`  
 </div>
 
 * Searching within a field with an empty parameter (e.g. `find n/`, `find t/` or `find d/`) will list all team members within FirstImpressions
+* Searching within a field for whitespaces (e.g. `find n/" "`) will be treated the same as an empty parameter
 * The search for names and tags are case-insensitive. e.g `hans` will match `Hans`
 * Partial matches will be shown e.g. `find n/Ali` will find a person named `Alice`
 * Date must be in `YYYY-MM-DD` format.
