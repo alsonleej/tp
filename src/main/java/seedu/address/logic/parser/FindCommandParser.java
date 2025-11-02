@@ -62,7 +62,7 @@ public class FindCommandParser implements Parser<FindCommand> {
         // Defensive validation: ensure all date strings are valid
         for (String dateStr : allDates) {
             if (!dateStr.isEmpty() && !isValidDate(dateStr)) {
-                throw new ParseException("Invalid date!");
+                throw new ParseException("Invalid date! Must be of the format YYYY-MM-DD");
             }
         }
 
