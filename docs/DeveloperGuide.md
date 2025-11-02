@@ -1,4 +1,4 @@
----
+﻿---
 layout: page
 title: Developer Guide
 ---
@@ -19,6 +19,8 @@ title: Developer Guide
 * [Proposed Features](#proposed-features)
   * [[Proposed] Undo/redo feature](#proposed-undoredo-feature)
   * [[Proposed] Timezone Support](#proposed-timezone-support)
+  * [[Proposed] Find Booking](#proposed-find-booking)
+  * [[Proposed] Toggle Between 24H to 12H Time](#proposed-toggle-between-24h-to-12h-time)
 * [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 * [Appendix: Requirements](#appendix-requirements)
   * [Product scope](#product-scope)
@@ -457,16 +459,24 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     FirstImpressions throws error "Name too long" \
     Use case ends
 
- - 2c. Invalid name characters \
-    FirstImpressions throws error "Names should only contain alphabetic characters, spaces, apostrophes, hyphens, and slashes" \
-    Use case ends
+ - 2c. Invalid name (blank/empty) \
+  FirstImpressions throws error "Names should not be blank and must be 100 characters or less." \
+  Use case ends
 
  - 2d. Too many tags \
     FirstImpressions throws error "Remove existing tag before adding new one" \
     Use case ends
 
  - 2e. Invalid tag \
-    FirstImpressions throws error "Tag contains invalid characters" \
+    FirstImpressions throws error "Tag names should not be blank and should only contain letters and numbers (no spaces or special characters)." \
+    Use case ends
+
+ - 2f. Tag is too long \
+    FirstImpressions throws error "Tag name is too long! Please keep it to 50 characters or less." \
+    Use case ends
+
+ - 2g. Email is too long \
+    FirstImpressions throws error "Email address is too long! Please keep it to 50 characters or less." \
     Use case ends
 
 
@@ -517,11 +527,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   FirstImpressions throws error "Booking requires datetime, client, team member, and description." \
   Use case ends
 
-- 2c. Invalid client name \
-  FirstImpressions throws error "Invalid client name. Must be 1-100 characters with at least one letter. Only letters, numbers, spaces, hyphens, apostrophes, periods, and slashes are allowed." \
+- 2c. Invalid client name (blank/too long) \
+  FirstImpressions throws error "Client name should not be blank and must be 100 characters or less." \
   Use case ends
 
-- 2d. Duplicate parameter \
+- 2d. Invalid datetime format \
+  FirstImpressions throws error "Invalid date/time format or value!\nPlease use the format: YYYY-MM-DD HH:MM (e.g., 2024-12-25 14:30)" \
+  Use case ends
+
+- 2e. Invalid datetime value \
+  FirstImpressions throws error "Invalid datetime \"[formatted datetime]\", that datetime does not exist " (e.g., "Invalid datetime \"February 31st 2026 14:00\", that datetime does not exist " for invalid dates like February 31st) \
+  Use case ends
+
+- 2f. Duplicate parameter \
   FirstImpressions throws error "Parameter [parameter] specified multiple times. Each parameter should appear only once." \
   Use case ends
 
@@ -616,7 +634,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends.
 
 - **1b.** Invalid date format provided. \
-  FirstImpressions displays an error: "Invalid date! Must be of the format YYYY-MM-DD" \
+  FirstImpressions displays an error: "Invalid date! Expected format: YYYY-MM-DD (e.g., 2025-10-20)" \
   Use case ends.
 
 - **3a.** No persons match the search criteria. \
@@ -937,7 +955,7 @@ testers are expected to do more *exploratory* testing.
 4. **Adding a person with invalid data**
 
    1. Test case: `add n/ p/123 e/invalid-email`<br>
-      Expected: Error message "Names should only contain alphabetic characters, spaces, apostrophes, and hyphens"
+      Expected: Error message "Names should not be blank and must be 100 characters or less."
 
 ### Editing a person
 

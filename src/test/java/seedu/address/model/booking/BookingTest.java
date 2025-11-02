@@ -76,6 +76,28 @@ public class BookingTest {
     }
 
     @Test
+    public void parseDateTime_invalidHours_returnsNull() {
+        // Hours > 23 should return null
+        LocalDateTime result = Booking.parseDateTime("2026-12-20 24:00");
+        assertNull(result, "Hour 24 should return null");
+        result = Booking.parseDateTime("2026-12-20 25:00");
+        assertNull(result, "Hour 25 should return null");
+        result = Booking.parseDateTime("2026-12-20 99:00");
+        assertNull(result, "Hour 99 should return null");
+    }
+
+    @Test
+    public void parseDateTime_invalidMinutes_returnsNull() {
+        // Minutes > 59 should return null
+        LocalDateTime result = Booking.parseDateTime("2026-12-20 12:60");
+        assertNull(result, "Minute 60 should return null");
+        result = Booking.parseDateTime("2026-12-20 12:99");
+        assertNull(result, "Minute 99 should return null");
+        result = Booking.parseDateTime("2026-12-20 23:61");
+        assertNull(result, "Minute 61 should return null");
+    }
+
+    @Test
     public void isFutureDateTime_futureDate_returnsTrue() {
         // A date far in the future
         LocalDateTime futureDate = LocalDateTime.of(2099, 12, 31, 23, 59);
@@ -104,10 +126,7 @@ public class BookingTest {
         // Test that invalid dates return specific error messages
         String error = Booking.validateDateTime("2026-02-31 10:00");
         assertNotNull(error, "Invalid date should return error message");
-        assertTrue(error.contains("February 31st 2026"),
-                "Error message should contain 'February 31st 2026'");
-        assertTrue(error.contains("does not exist"),
-                "Error message should mention date does not exist");
+        assertEquals("Invalid datetime \"February 31st 2026 10:00\", that datetime does not exist ", error);
     }
 
     @Test
@@ -134,14 +153,11 @@ public class BookingTest {
 
     @Test
     public void isValidClientName() {
-        // invalid client names
+        // invalid client names (blank/empty)
         assertFalse(Booking.isValidClientName("")); // empty string
         assertFalse(Booking.isValidClientName(" ")); // spaces only
-        assertFalse(Booking.isValidClientName("!")); // only invalid characters
-        assertFalse(Booking.isValidClientName("John@Doe")); // contains invalid character
-        assertFalse(Booking.isValidClientName("".repeat(101))); // too long (101 characters)
 
-        // valid client names
+        // valid client names (can contain any characters, including special characters and numbers)
         assertTrue(Booking.isValidClientName("John Doe")); // alphabets only
         assertTrue(Booking.isValidClientName("John O'Brien")); // with apostrophe
         assertTrue(Booking.isValidClientName("Mary-Jane")); // with hyphen
@@ -149,6 +165,10 @@ public class BookingTest {
         assertTrue(Booking.isValidClientName("Abhijay s/o Abhi")); // with forward slash
         assertTrue(Booking.isValidClientName("John\\Doe")); // with backslash
         assertTrue(Booking.isValidClientName("Jean-Paul O'Connor/Smith")); // with all special chars
+        assertTrue(Booking.isValidClientName("!")); // special characters only
+        assertTrue(Booking.isValidClientName("John@Doe")); // contains @ symbol (previously invalid)
+        assertTrue(Booking.isValidClientName("Bob#123")); // contains # and numbers
+        assertTrue(Booking.isValidClientName("12345")); // numbers only
         assertTrue(Booking.isValidClientName("a".repeat(100))); // exactly 100 chars (max length)
     }
 
@@ -161,6 +181,25 @@ public class BookingTest {
 
         Booking booking = new Booking(clientName, datetime, description);
         assertEquals(clientName, booking.getClientName());
+    }
+
+    @Test
+    public void constructor_clientNameWithSpecialCharacters_success() {
+        // Test that bookings can be created with special characters in client name (previously invalid)
+        LocalDateTime datetime = LocalDateTime.of(2026, 12, 25, 10, 0);
+        String description = "Consultation";
+
+        // Test with @ symbol
+        Booking booking1 = new Booking("John@Doe", datetime, description);
+        assertEquals("John@Doe", booking1.getClientName());
+
+        // Test with & symbol
+        Booking booking2 = new Booking("Bob&Company", datetime, description);
+        assertEquals("Bob&Company", booking2.getClientName());
+
+        // Test with # and numbers
+        Booking booking3 = new Booking("Client#123", datetime, description);
+        assertEquals("Client#123", booking3.getClientName());
     }
 
     @Test
@@ -183,7 +222,7 @@ public class BookingTest {
         // Test that invalid month (e.g., month > 12) returns proper error message
         String error = Booking.validateDateTime("2026-13-01 10:00");
         assertNotNull(error, "Invalid month should return error message");
-        assertTrue(error.contains("does not exist"), "Should contain 'does not exist'");
+        assertEquals("Invalid datetime \"Month 13 1st 2026 10:00\", that datetime does not exist ", error);
     }
 
     @Test
@@ -191,7 +230,31 @@ public class BookingTest {
         // Test date that matches format but cannot be parsed for day extraction
         String error = Booking.validateDateTime("2026-02-31 10:00");
         assertNotNull(error, "Invalid date should return error message");
-        assertTrue(error.contains("does not exist"), "Should contain 'does not exist'");
+        assertEquals("Invalid datetime \"February 31st 2026 10:00\", that datetime does not exist ", error);
+    }
+
+    @Test
+    public void validateDateTime_invalidHours_returnsErrorMessage() {
+        // Test that invalid hours return error messages with time included
+        String error = Booking.validateDateTime("2026-12-20 24:00");
+        assertNotNull(error, "Invalid hour should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 24:00\", that datetime does not exist ", error);
+
+        error = Booking.validateDateTime("2026-12-20 25:00");
+        assertNotNull(error, "Invalid hour should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 25:00\", that datetime does not exist ", error);
+    }
+
+    @Test
+    public void validateDateTime_invalidMinutes_returnsErrorMessage() {
+        // Test that invalid minutes return error messages with time included
+        String error = Booking.validateDateTime("2026-12-20 12:99");
+        assertNotNull(error, "Invalid minute should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 12:99\", that datetime does not exist ", error);
+
+        error = Booking.validateDateTime("2026-12-20 12:60");
+        assertNotNull(error, "Invalid minute should return error message");
+        assertEquals("Invalid datetime \"December 20th 2026 12:60\", that datetime does not exist ", error);
     }
 
     @Test

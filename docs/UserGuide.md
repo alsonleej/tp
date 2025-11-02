@@ -155,7 +155,10 @@ Refer to the [Features](#features) below for details of each command.
   e.g `n/PERSON_NAME [t/TAG]` can be used as `n/Alice Tan t/vipHandler` or as `n/Alice Tan`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG​]…` can be used as ` ` (i.e. 0 times), `t/vipHandler`, `t/vipHandler t/teamLead` etc.
+  e.g. `[t/TAG​]…` can be used as ` ` (i.e. 0 times), `t/vipHandler`, `t/vipHandler t/teamLead` etc.
+
+* Fields can be specified in any order, for all commands.<br>
+  e.g. `add n/Alice Tan p/98765432 e/alicetan@gmail.com` and `add p/98765432 e/alicetan@gmail.com n/Alice Tan` are both valid.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, and `exit`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
@@ -180,7 +183,13 @@ Adds a person to the contact list.
 Format: `add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`
 
 * Consecutive spaces in name are removed. e.g. "Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tan" will be saved as `Alice Tan`.
-* Names can contain letters, spaces, apostrophes, hyphens, and slashes. e.g. `s/o` (son of), `d/o` (daughter of).
+* Names should not be blank and can contain any characters (letters, numbers, spaces, special characters, etc.).
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
+Field delimiters (like `p/`, `t/`, `e/`, `n/`) with a space before them will be treated as separate fields, even if they appear in a name. <br>
+For example, `add n/Bob t/Lee` will be interpreted as name "Bob" with tag "Lee", not as name "Bob t/Lee". <br>
+To include text like "t/" in a name, avoid having a space before the delimiter (e.g., use `Bobt/Lee` or `Bob-t/Lee`).
+</div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Duplicate names are not allowed. Each person in the contact list must have a unique name. <br>
@@ -189,15 +198,15 @@ For example: Alice Tan - Glasses, Alice Tan - No Glasses
 </div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
-Tags must contain only letters and numbers (no spaces, hyphens, or special characters)! <br>
+Tags should not be blank and must contain only letters and numbers (no spaces, hyphens, or special characters)! <br>
 Try using camelCase for multi-word tags! (e.g. `vipHandler`, instead of `vip-handler` or `vip handler`)
 </div>
 
 <div markdown="span" class="alert alert-info">:information_source: **Character Limits:** <br>
-* Names: Maximum 100 characters (must start with a letter) <br>
-* Phone: Can contain any characters (numbers, +, (), -, spaces, letters, etc.), but cannot be spaces only. <br>
-* Email: Must be a valid email format (username@domain.com) <br>
-* Tags: Letters and numbers only <br>
+* Names: Maximum 100 characters <br>
+* Phone: Maximum 50 characters. Can contain any characters (numbers, +, (), -, spaces, letters, etc.), but cannot be spaces only. <br>
+* Email: Maximum 50 characters. Must be a valid email format (username@domain.com) <br>
+* Tags: Maximum 50 characters. Letters and numbers only <br>
 </div>
 
 Examples:
@@ -216,9 +225,14 @@ Adds tags to an existing person.
 Format: `add n/NAME t/TAG…​`
 
 * Consecutive spaces in name are removed. e.g. "Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tan" will be read as `Alice Tan`.
-* Multiple tags can be added at once by prefixing each tag with `t/`.
-* Tags must contain only letters and numbers, without spaces.
+* Multiple  tags can be added at once by prefixing each tag with `t/`.
+* Tags should not be blank and must contain only letters and numbers, without spaces.
 * If person does not already exist in FirstImpressions, the person is created.
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:** <br>
+When adding tags to an existing person, other fields like phone number `p/` and email `e/` will be **ignored**. <br>
+To change phone numbers or email addresses, use the `edit` command instead.
+</div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:** Names used here must be case-sensitive! <br>
 `add n/Alice tan t/closer` will not add tags to `Alice Tan`. Use the exact name as shown in the contact list. <br>
@@ -392,7 +406,7 @@ Assigns a client meeting to a person at a given date and time, with an optional 
 Format: `book dt/DATETIME c/CLIENT_NAME n/PERSON_NAME [desc/DESCRIPTION]`
 
 * Name of person provided must be in the current contact list.
-* Client name can contain letters, numbers, spaces, apostrophes, hyphens, periods, and slashes. e.g. `s/o` (son of), `d/o` (daughter of). Must be 1-100 characters and contain at least one letter.
+* Client name should not be blank and can contain any characters (letters, numbers, spaces, special characters, etc.). Must be 100 characters or less.
 * Datetime must be in `YYYY-MM-DD HH:MM` format in 24-hour notation.
 * The keyword (delimiter) here is `dt/` as it includes both date and time.
 
@@ -410,9 +424,13 @@ Additionally, past bookings will appear greyed out (with reduced opacity) in the
 The bookings are sorted with future bookings at the top (in chronological order) and past bookings at the bottom (also in chronological order).
 </div>
 
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+You can resize the booking table columns by dragging the column borders. The Client column can be resized freely to accommodate longer client names.
+</div>
+
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Dates must be valid calendar dates. <br>
-Invalid dates like 2026-02-31 will be rejected with: "Invalid date/time format or value! Please use the format: YYYY-MM-DD HH:MM (e.g., 2024-12-25 14:30)."
+Invalid dates like `2026-02-31 14:00` will be rejected with: `Invalid datetime "February 31st 2026 14:00", that datetime does not exist `.
 </div>
 
 Examples:

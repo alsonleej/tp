@@ -175,4 +175,35 @@ public class AddCommandParserTest {
                 + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
     }
+
+    @Test
+    public void parse_nameTooLong_failure() {
+        // Test add command with name exceeding 100 characters
+        String longName101 = " " + PREFIX_NAME + "a".repeat(101);
+        assertParseFailure(parser, longName101 + PHONE_DESC_BOB + EMAIL_DESC_BOB,
+                Name.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longName150 = " " + PREFIX_NAME + "b".repeat(150);
+        assertParseFailure(parser, longName150 + PHONE_DESC_BOB + EMAIL_DESC_BOB,
+                Name.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longName200 = " " + PREFIX_NAME + "c".repeat(200);
+        assertParseFailure(parser, longName200, Name.MESSAGE_LENGTH_CONSTRAINT);
+    }
+
+    @Test
+    public void parse_phoneTooLong_failure() {
+        // Test add command with phone exceeding 50 characters
+        String longPhone51 = " " + PREFIX_PHONE + "1".repeat(51);
+        assertParseFailure(parser, NAME_DESC_BOB + longPhone51 + EMAIL_DESC_BOB,
+                Phone.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longPhone100 = " " + PREFIX_PHONE + "1".repeat(100);
+        assertParseFailure(parser, NAME_DESC_BOB + longPhone100 + EMAIL_DESC_BOB,
+                Phone.MESSAGE_LENGTH_CONSTRAINT);
+
+        String longPhone200 = " " + PREFIX_PHONE + "1".repeat(200);
+        assertParseFailure(parser, NAME_DESC_BOB + longPhone200,
+                Phone.MESSAGE_LENGTH_CONSTRAINT);
+    }
 }

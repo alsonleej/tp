@@ -46,10 +46,10 @@ public class DeleteCommandParserTest {
     }
 
     @Test
-    // EP: invalid name format (violates constraints)
-    public void parse_invalidNameType_throwsParseException() {
-        assertParseFailure(parser, "delete n/R@chel",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, Name.MESSAGE_CONSTRAINTS));
+    // EP: name with special characters (previously invalid, now valid)
+    public void parse_nameWithSpecialCharacters_success() {
+        assertParseSuccess(parser, "delete n/John@Doe",
+                new DeleteCommand(new Name("John@Doe"), Optional.empty()));
     }
 
     //Tests for parsing tags

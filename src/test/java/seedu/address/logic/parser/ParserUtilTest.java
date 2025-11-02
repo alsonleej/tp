@@ -21,7 +21,7 @@ import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
-    private static final String INVALID_NAME = "R@chel";
+    private static final String INVALID_NAME = ""; // empty string (names must be non-blank)
     private static final String INVALID_PHONE = " ";
     private static final String INVALID_ADDRESS = " ";
     private static final String INVALID_EMAIL = "example.com";
@@ -66,7 +66,7 @@ public class ParserUtilTest {
     }
 
     @Test
-    // EP: invalid name characters
+    // EP: invalid name (blank/empty)
     public void parseName_invalidValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseName(INVALID_NAME));
     }
@@ -82,8 +82,15 @@ public class ParserUtilTest {
     @Test
     // BVA: name length 101 (invalid)
     public void parseName_exceedsMaxLength_throwsParseException() {
-        String hundredOneAs = "A".repeat(101);
-        assertThrows(IllegalArgumentException.class, () -> ParserUtil.parseName(hundredOneAs));
+        // Test various lengths over 100 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(101))); // 101 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(102))); // 102 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(150))); // 150 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseName("A".repeat(200))); // 200 characters
+
+        // Test with valid name pattern but exceeding length
+        String longNameWithSpaces = "John " + "Doe ".repeat(50); // More than 100 characters with spaces
+        assertThrows(ParseException.class, () -> ParserUtil.parseName(longNameWithSpaces));
     }
 
     @Test
@@ -99,6 +106,23 @@ public class ParserUtilTest {
         String nameWithWhitespace = WHITESPACE + VALID_NAME + WHITESPACE;
         Name expectedName = new Name(VALID_NAME);
         assertEquals(expectedName, ParserUtil.parseName(nameWithWhitespace));
+    }
+
+    @Test
+    // EP: valid name with special characters (previously invalid, now valid)
+    public void parseName_validValueWithSpecialCharacters_returnsName() throws Exception {
+        // Test names with various special characters that were previously invalid
+        Name name1 = ParserUtil.parseName("R@chel");
+        assertEquals(new Name("R@chel"), name1);
+
+        Name name2 = ParserUtil.parseName("James&");
+        assertEquals(new Name("James&"), name2);
+
+        Name name3 = ParserUtil.parseName("John*Smith");
+        assertEquals(new Name("John*Smith"), name3);
+
+        Name name4 = ParserUtil.parseName("Bob#123");
+        assertEquals(new Name("Bob#123"), name4);
     }
 
     @Test
@@ -118,6 +142,28 @@ public class ParserUtilTest {
     public void parsePhone_validValueWithoutWhitespace_returnsPhone() throws Exception {
         Phone expectedPhone = new Phone(VALID_PHONE);
         assertEquals(expectedPhone, ParserUtil.parsePhone(VALID_PHONE));
+    }
+
+    @Test
+    // BVA: phone length exactly 50 (valid)
+    public void parsePhone_maxLength_returnsPhone() throws Exception {
+        String fiftyOnes = "1".repeat(50);
+        Phone expectedPhone = new Phone(fiftyOnes);
+        assertEquals(expectedPhone, ParserUtil.parsePhone(fiftyOnes));
+    }
+
+    @Test
+    // BVA: phone length 51 (invalid)
+    public void parsePhone_exceedsMaxLength_throwsParseException() {
+        // Test various lengths over 50 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(51))); // 51 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(52))); // 52 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(100))); // 100 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("1".repeat(200))); // 200 characters
+
+        // Test with valid phone pattern but exceeding length
+        String longPhoneWithFormat = "+65 " + "1".repeat(48); // 51 characters with format
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone(longPhoneWithFormat));
     }
 
     @Test
@@ -183,6 +229,36 @@ public class ParserUtilTest {
     }
 
     @Test
+    // BVA: email length exactly 50 (valid)
+    public void parseEmail_maxLength_returnsEmail() throws Exception {
+        String fiftyCharEmail = "a".repeat(44) + "@b.co"; // exactly 50 chars
+        Email expectedEmail = new Email(fiftyCharEmail);
+        assertEquals(expectedEmail, ParserUtil.parseEmail(fiftyCharEmail));
+    }
+
+    @Test
+    // BVA: email length 51 (invalid)
+    public void parseEmail_exceedsMaxLength_throwsParseException() {
+        // Test various lengths over 50 characters with valid email format
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(
+                "a".repeat(43) + "@example.com")); // 55 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(
+                "user" + "1".repeat(40) + "@example.com")); // 56 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(
+                "a".repeat(92) + "@example.com")); // 104 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(
+                "a".repeat(192) + "@example.com")); // 204 characters
+
+        // Test with valid email pattern but exceeding length - long local part
+        String longEmailLocal = "user" + "1".repeat(41) + "@example.com"; // 61 characters with valid format
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(longEmailLocal));
+
+        // Test with valid email pattern but exceeding length - long domain
+        String longEmailDomain = "user@" + "example".repeat(7) + ".com"; // 57 characters with long domain
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(longEmailDomain));
+    }
+
+    @Test
     // EP: null tag should throw NPE
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));
@@ -207,6 +283,32 @@ public class ParserUtilTest {
         String tagWithWhitespace = WHITESPACE + VALID_TAG_1 + WHITESPACE;
         Tag expectedTag = new Tag(VALID_TAG_1);
         assertEquals(expectedTag, ParserUtil.parseTag(tagWithWhitespace));
+    }
+
+    @Test
+    // BVA: tag length exactly 50 (valid)
+    public void parseTag_maxLength_returnsTag() throws Exception {
+        String fiftyAs = "a".repeat(50);
+        Tag expectedTag = new Tag(fiftyAs);
+        assertEquals(expectedTag, ParserUtil.parseTag(fiftyAs));
+    }
+
+    @Test
+    // BVA: tag length 51 (invalid)
+    public void parseTag_exceedsMaxLength_throwsParseException() {
+        // Test various lengths over 50 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(51))); // 51 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(52))); // 52 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(100))); // 100 characters
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag("a".repeat(200))); // 200 characters
+
+        // Test with valid tag pattern (alphanumeric) but exceeding length
+        String longTagWithNumbers = "tag" + "1".repeat(49); // 52 characters with numbers
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag(longTagWithNumbers));
+
+        // Test with mixed alphanumeric characters
+        String longTagMixed = "VIP" + "123".repeat(16); // 51 characters with mixed chars
+        assertThrows(ParseException.class, () -> ParserUtil.parseTag(longTagMixed));
     }
 
     @Test
