@@ -52,17 +52,50 @@ class FindCommandParserTest {
     }
 
     @Test
-    // mixed prefixes: ensure parsed predicate matches expected keys
+    // mixed prefixes: ensure parsed predicate includes both name and tag
     void parse_nameAndTag() throws Exception {
-        // Input includes both name and tag, but we only assert tag in the
-        // expected predicate
         String userInput = "n/Alex t/friend";
-
-        // Only include the tag key in the expected criteria
-        Map<String, List<String>> criteria = Map.of("tag", List.of("friend"));
-
+        Map<String, List<String>> criteria = Map.of(
+            "tag", List.of("friend")
+        );
         FindCommand expectedCommand = new FindCommand(new ClientContainsKeywordsPredicate(criteria));
-
         assertParseSuccess(parser, userInput, expectedCommand);
+    }
+
+    @Test
+    // empty prefix for name should throw parse exception
+    void parse_emptyNamePrefix() {
+        String userInput = "n/";
+        assertThrows(ParseException.class, () -> parser.parse(userInput));
+    }
+
+    @Test
+    // empty prefix for tag should throw parse exception
+    void parse_emptyTagPrefix() {
+        String userInput = "t/";
+        assertThrows(ParseException.class, () -> parser.parse(userInput));
+    }
+
+    @Test
+    // empty prefix for date should throw parse exception
+    void parse_emptyDatePrefix() {
+        String userInput = "d/";
+        assertThrows(ParseException.class, () -> parser.parse(userInput));
+    }
+
+    @Test
+    // Test mixing empty and non-empty prefixes - expect only non-empty values in criteria
+    void parse_mixedEmptyAndNonEmptyPrefixes() throws Exception {
+        // Empty tag with non-empty name
+        String userInput = "n/Alice t/";
+        Map<String, List<String>> criteria = Map.of("tag", List.of());
+        FindCommand expectedCommand = new FindCommand(new ClientContainsKeywordsPredicate(criteria));
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        // Empty date with non-empty tag
+        userInput = "t/friend d/";
+        Map<String, List<String>> criteria2 = Map.of("date", List.of());
+        FindCommand expectedCommand2 = new FindCommand(new ClientContainsKeywordsPredicate(criteria2));
+        assertParseSuccess(parser, userInput, expectedCommand2);
     }
 }

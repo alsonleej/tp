@@ -312,6 +312,7 @@ If multiple tags are being searched for, each parameter must have its own `t/`  
 </div>
 
 * Searching within a field with an empty parameter (e.g. `find n/`, `find t/` or `find d/`) will list all team members within FirstImpressions
+* Searching within a field for whitespaces (e.g. `find n/" "`) will be treated the same as an empty parameter
 * The search for names and tags are case-insensitive. e.g `hans` will match `Hans`
 * Partial matches will be shown e.g. `find n/Ali` will find a person named `Alice`
 * Date must be in `YYYY-MM-DD` format.

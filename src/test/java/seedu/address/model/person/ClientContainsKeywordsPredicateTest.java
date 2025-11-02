@@ -89,6 +89,20 @@ public class ClientContainsKeywordsPredicateTest {
     }
 
     @Test
+    public void test_emptyTagList_matchesOnlyPeopleWithTags() {
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("tag", Collections.emptyList());
+        ClientContainsKeywordsPredicate predicate = buildPredicate(map);
+
+        // matches - has any tags
+        assertTrue(predicate.test(new PersonBuilder().withTags("friend").build()));
+        assertTrue(predicate.test(new PersonBuilder().withTags("colleague").build()));
+
+        // does not match - has no tags
+        assertFalse(predicate.test(new PersonBuilder().build()));
+    }
+
+    @Test
     public void test_dateMatching() {
         Map<String, List<String>> map = new HashMap<>();
         map.put("date", List.of("2025-10-15"));
@@ -98,14 +112,32 @@ public class ClientContainsKeywordsPredicateTest {
         PersonBuilder personWithBooking = new PersonBuilder().withBookings(Arrays.asList(new Booking(
                                         "Test Client", LocalDateTime.of(2025, 10, 15, 10, 0), "desc")));
         assertTrue(predicate.test(personWithBooking.build()));
+    }
 
-        // Person with different booking date
-        PersonBuilder personOtherDate = new PersonBuilder().withBookings(Arrays.asList(new Booking("Test Client",
-                                        LocalDateTime.of(2025, 11, 20, 10, 0), "desc")));
-        assertFalse(predicate.test(personOtherDate.build()));
+    @Test
+    public void test_emptyDateList_matchesOnlyPeopleWithBookings() {
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("date", Collections.emptyList());
+        ClientContainsKeywordsPredicate predicate = buildPredicate(map);
 
-        // Person with no bookings
+        // matches - has any bookings
+        PersonBuilder personWithBooking = new PersonBuilder().withBookings(Arrays.asList(new Booking(
+                "Test Client", LocalDateTime.of(2025, 10, 15, 10, 0), "desc")));
+        assertTrue(predicate.test(personWithBooking.build()));
+
+        // does not match - has no bookings
         assertFalse(predicate.test(new PersonBuilder().build()));
+    }
+
+    @Test
+    public void test_emptyNameList_matchesAll() {
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("name", Collections.emptyList());
+        ClientContainsKeywordsPredicate predicate = buildPredicate(map);
+
+        // matches everyone - name field shows all when empty
+        assertTrue(predicate.test(new PersonBuilder().withName("Alice").build()));
+        assertTrue(predicate.test(new PersonBuilder().withName("Bob").build()));
     }
 
     @Test

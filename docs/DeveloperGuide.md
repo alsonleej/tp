@@ -18,8 +18,6 @@ title: Developer Guide
   * [Design Choices](#design-choices)
 * [Proposed Features](#proposed-features)
   * [[Proposed] Undo/redo feature](#proposed-undoredo-feature)
-  * [[Proposed] Reschedule Booking](#proposed-reschedule-booking)
-  * [[Proposed] Edit Booking Clients/Description](#proposed-edit-booking-clientsdescription)
   * [[Proposed] Timezone Support](#proposed-timezone-support)
   * [[Proposed] Find Booking](#proposed-find-booking)
   * [[Proposed] Toggle Between 24H to 12H Time](#proposed-toggle-between-24h-to-12h-time)
@@ -30,6 +28,7 @@ title: Developer Guide
   * [Use cases](#use-cases)
   * [Non-Functional Requirements](#non-functional-requirements)
   * [Glossary](#glossary)
+* [Appendix: Planned Enhancements](#appendix-planned-enhancements)
 * [Appendix: Instructions for manual testing](#appendix-instructions-for-manual-testing)
 
 </div>
@@ -59,7 +58,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 **Main components of the architecture**
 
-**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
+**`Main`** (consisting of classes [`Main`](https://github.com/se-edu/FirstImpressions-level3/tree/master/src/main/java/seedu/address/Main.java) and [`MainApp`](https://github.com/se-edu/FirstImpressions-level3/tree/master/src/main/java/seedu/address/MainApp.java)) is in charge of the app launch and shut down.
 * At app launch, it initializes the other components in the correct sequence, and connects them up with each other.
 * At shut down, it shuts down the other components and invokes cleanup methods where necessary.
 
@@ -108,7 +107,7 @@ The `UI` component,
 
 ### Logic component
 
-**API** : [`Logic.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
+**API** : [`Logic.java`](https://github.com/se-edu/FirstImpressions-level3/tree/master/src/main/java/seedu/address/logic/Logic.java)
 
 Here's a (partial) class diagram of the `Logic` component:
 
@@ -123,7 +122,7 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 
 How the `Logic` component works:
 
-1. When `Logic` is called upon to execute a command, it is passed to an `AddressBookParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
+1. When `Logic` is called upon to execute a command, it is passed to an `FirstImpressionsParser` object which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
 1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
 1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the `Model`) to achieve.
@@ -134,11 +133,11 @@ Here are the other classes in `Logic` (omitted from the class diagram above) tha
 <img src="images/ParserClasses.png"/>
 
 How the parsing works:
-* When called upon to parse a user command, the `AddressBookParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `AddressBookParser` returns back as a `Command` object.
+* When called upon to parse a user command, the `FirstImpressionsParser` class creates an `XYZCommandParser` (`XYZ` is a placeholder for the specific command name e.g., `AddCommandParser`) which uses the other classes shown above to parse the user command and create a `XYZCommand` object (e.g., `AddCommand`) which the `FirstImpressionsParser` returns back as a `Command` object.
 * All `XYZCommandParser` classes (e.g., `AddCommandParser`, `DeleteCommandParser`, ...) inherit from the `Parser` interface so that they can be treated similarly where possible e.g, during testing.
 
 ### Model component
-**API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
+**API** : [`Model.java`](https://github.com/se-edu/FirstImpressions-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
 <img src="images/ModelClassDiagram.png"/>
 
@@ -152,7 +151,7 @@ The `Model` component,
 * A `Person` has a `Name`, `Phone`, `Email`, and may have 0 or any number of `Tag`s or `Booking`s.
 
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
+<div markdown="span" class="alert alert-info">:information_source: **Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `FirstImpressions`, which `Person` references. This allows `FirstImpressions` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
 
 <img src="images/BetterModelClassDiagram.png"/>
 
@@ -160,13 +159,13 @@ The `Model` component,
 
 ### Storage component
 
-**API** : [`Storage.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
+**API** : [`Storage.java`](https://github.com/se-edu/FirstImpressions-level3/tree/master/src/main/java/seedu/address/storage/Storage.java)
 
 <img src="images/StorageClassDiagramNew.png"/>
 
 The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
-* inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
+* inherits from both `FirstImpressionsStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
 
 ### Common classes
@@ -196,7 +195,7 @@ Validation is performed in `FindCommandParser` for better separation of concerns
 - **Alternative 1:** Search for results using a logical **AND** operation making search results more accurate and  easy to find specific team members
 - **Alternative 2 (current choice):** Search for results   using a logical **OR** operation to include as many results as possible to ensure user does not miss / mismatch any inputs and intended results
   - *Pros:* Easier to find groups of people even with mismatched input (e.g. `find n/Alex Loh` returns results for `Alex Yeoh` and `Brian Loh`)
-  - *Cons:* Inability to find specific people among team members with similar names (e.g. When rearching for `Alex Yeoh` with a `teamLead` tag among mutiple `Alex Yeoh`s, doing `find n/Alex Yeoh t/teamLead` will list all results for both search parameters)
+  - *Cons:* Inability to find specific people among team members with similar names (e.g. When searching for `Alex Yeoh` with a `teamLead` tag among multiple `Alex Yeoh`s, doing `find n/Alex Yeoh t/teamLead` will list all results for both search parameters)
 
 **Chosen Approach:**
 `find` supports combining multiple prefixes using a logical **OR** relationship.
@@ -225,37 +224,37 @@ This section describes some noteworthy details on how certain features are imple
 
 #### Proposed Implementation
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+It extends `FirstImpressions` with an undo/redo history, stored internally as an `FirstImpressionsStateList` and `currentStatePointer`. Additionally, it implements the following operations:
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+* `VersionedFirstImpressions#commit()` — Saves the current address book state in its history.
+* `VersionedFirstImpressions#undo()` — Restores the previous address book state from its history.
+* `VersionedFirstImpressions#redo()` — Restores a previously undone address book state from its history.
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+These operations are exposed in the `Model` interface as `Model#commitFirstImpressions()`, `Model#undoFirstImpressions()` and `Model#redoFirstImpressions()` respectively.
 
 Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+Step 1. The user launches the application for the first time. The `VersionedFirstImpressions` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
 
 ![UndoRedoState0](images/UndoRedoState0.png)
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitFirstImpressions()`, causing the modified state of the address book after the `delete n/Alex` command executes to be saved in the `FirstImpressionsStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
 
 ![UndoRedoState1](images/UndoRedoState1.png)
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitFirstImpressions()`, causing another modified address book state to be saved into the `FirstImpressionsStateList`.
 
 ![UndoRedoState2](images/UndoRedoState2.png)
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** If a command fails its execution, it will not call `Model#commitFirstImpressions()`, so the address book state will not be saved into the `FirstImpressionsStateList`.
 
 </div>
 
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
+Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoFirstImpressions()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
 
 ![UndoRedoState3](images/UndoRedoState3.png)
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
+<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index 0, pointing to the initial FirstImpressions state, then there are no previous FirstImpressions states to restore. The `undo` command uses `Model#canUndoFirstImpressions()` to check if this is the case. If so, it will return an error to the user rather
 than attempting to perform the undo.
 
 </div>
@@ -272,17 +271,17 @@ Similarly, how an undo operation goes through the `Model` component is shown bel
 
 ![UndoSequenceDiagram](images/UndoSequenceDiagram-Model.png)
 
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
+The `redo` command does the opposite — it calls `Model#redoFirstImpressions()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+<div markdown="span" class="alert alert-info">:information_source: **Note:** If the `currentStatePointer` is at index `FirstImpressionsStateList.size() - 1`, pointing to the latest address book state, then there are no undone FirstImpressions states to restore. The `redo` command uses `Model#canRedoFirstImpressions()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
 
 </div>
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitFirstImpressions()`, `Model#undoFirstImpressions()` or `Model#redoFirstImpressions()`. Thus, the `FirstImpressionsStateList` remains unchanged.
 
 ![UndoRedoState4](images/UndoRedoState4.png)
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+Step 6. The user executes `clear`, which calls `Model#commitFirstImpressions()`. Since the `currentStatePointer` is not pointing at the end of the `FirstImpressionsStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
 
 ![UndoRedoState5](images/UndoRedoState5.png)
 
@@ -302,390 +301,6 @@ The following activity diagram summarizes what happens when a user executes a ne
   itself.
   * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
   * Cons: We must ensure that the implementation of each individual command are correct.
-
-
-### \[Proposed\] Reschedule Booking
-
-#### Proposed Implementation
-
-The reschedule mechanism allows users to update the datetime of an existing booking. It interacts with the **Model** and **Booking** classes to ensure no conflicts occur.
-
-**Operations:**
-
-  - `Model#rescheduleBooking(Booking booking, LocalDateTime newDateTime)` — Updates the booking with a new datetime after validation.
-  - `Booking#setDateTime(LocalDateTime newDateTime)` — Updates the datetime field of a booking.
-  - Optional undo support: Track changes in `VersionedAddressBook` to allow undo/redo of reschedules.
-
-
-#### Usage Scenario
-
-1.  The user views all bookings and identifies one to reschedule (e.g., a booking for Carl Kurz).
-
-2.  Executes the command:
-
-    ```
-     reschedule n/Carl Kurz b/2 dt/2025-10-25 14:00
-    ```
-
-    Where:
-
-    `b/2` = booking ID
-
-    `n/Carl Kurz` = team member name (added for clarity and verification)
-
-    `dt/2025-10-25 14:00` = new datetime
-
-    The Logic component parses the command and calls:
-
-    ```
-     model.rescheduleBooking(selectedBooking, newDateTime);
-    ```
-
-    The **Model** validates:
-
-      - The booking exists (using `b/2`).
-      - The team member name (`n/`) matches the team member in booking `b/2`.
-      - The new datetime does not conflict with other bookings for the same team member.
-      - All parameters are valid (non-null, proper format).
-
-    If validation passes, the booking datetime is updated. Otherwise, an error is thrown (e.g., team member mismatch, conflict, or invalid date).
-
-    The **Logic** component returns a `CommandResult` to the UI:
-
-      - **Success Example:**
-
-        ```
-        Booking rescheduled successfully: Carl Kurz, new datetime: 2025-10-25 14:00
-        ```
-
-      - **Failure Example:** Appropriate error message. <br>
-
-    <img src="images/RescheduleDiagram.png"/> <br>
-
-    **Sequence Diagram for Reschedule Command**
-
-#### Design Considerations
-
-**Conflict Detection:**
-
-  - Ensure the updated datetime does not conflict with other bookings for the same team member.
-  - Conflicts prevent the reschedule.
-
-**Undo/Redo Support:**
-
-  - Optional integration with **VersionedAddressBook**.
-  - Call `Model#commitAddressBook()` after a successful reschedule.
-
-**Parameter Validation:**
-
-  - Booking ID exists.
-  - Team member name (`n/`) matches the name in the booking. (New consideration)
-
-----
-
-### \[Proposed\] Edit Booking Clients/Description
-
-#### Proposed Implementation
-
-The edit booking mechanism allows users to update the client name or description of an existing booking without changing the datetime. This provides flexibility for booking management.
-
-**Operations:**
-
-  - `Model#editBooking(Booking booking, String newClientName, String newDescription)` — Updates the booking with new client name and/or description.
-  - `Booking#setClientName(String newClientName)` — Updates the client name field of a booking.
-  - `Booking#setDescription(String newDescription)` — Updates the description field of a booking.
-
-
-
-#### Usage Scenario
-
-1.  The user views all bookings and identifies one to edit (e.g., a booking for Carl Kurz).
-
-2.  Executes the command:
-
-    ```
-     editbooking n/Carl Kurz b/2 c/Madam Wong desc/Updated consultation details
-    ```
-
-    Where:
-
-    `b/2` = booking ID
-
-    `n/Carl Kurz` = team member name (for verification)
-
-    `c/Madam Wong` = new client name
-
-    `desc/Updated consultation details` = new description
-
-    The Logic component parses the command and calls:
-
-    ```
-     model.editBooking(selectedBooking, newClientName, newDescription);
-    ```
-
-    The **Model** validates:
-
-      - The booking exists (using booking ID).
-      - The team member name (`n/`) matches the team member in the booking.
-      - At least one field (client name or description) is provided for update.
-      - All parameters are valid (non-null, proper format).
-
-    If validation passes, the booking details are updated. Otherwise, an error is thrown.
-
-    The **Logic** component returns a `CommandResult` to the UI:
-
-      - **Success Example:**
-
-        ```
-        Booking updated successfully: Carl Kurz, Client: Madam Wong, Description: Updated consultation details
-        ```
-
-      - **Failure Example:** Appropriate error message.
-
-    <img src="images/EditBookingProposedSequence.png"/> <br>
-
-    **Sequence Diagram for Edit Booking Command**
-
-#### Design Considerations
-
-**Field Validation:**
-
-  - Client name must follow the same validation rules as new bookings.
-  - Description must follow the same validation rules as new bookings.
-  - At least one field must be provided for update.
-
-**Undo/Redo Support:**
-
-  - Integration with **VersionedAddressBook**.
-  - Call `Model#commitAddressBook()` after a successful edit.
-
-**Atomicity:**
-
-  - Edit booking is **all-or-nothing**: either fully applied or not applied at all.
-
-#### Extensions / Error Cases
-
-  - **Booking does not exist:**
-    Error: "Booking ID not found"
-
-  - **No fields to update:**
-    Error: "At least one field (client name or description) must be provided for update"
-
-  - **Invalid client name:**
-    Error: "Client name should not be blank and must be 100 characters or less."
-
-  - **Invalid description:**
-    Error: "Invalid description format"
-
-  - **Team member mismatch:**
-    Error: "Team member name does not match the booking"
-
----
-
-### \[Proposed\] Timezone Support
-
-#### Proposed Implementation
-
-The timezone mechanism allows users to work with bookings across different timezones, making the application suitable for global teams and clients.
-
-**Operations:**
-
-  - `Model#setUserTimezone(ZoneId timezone)` — Sets the user's preferred timezone.
-  - `Booking#getDateTimeInTimezone(ZoneId timezone)` — Returns booking datetime converted to specified timezone.
-  - `Booking#createBookingWithTimezone(String clientName, LocalDateTime datetime, String description, ZoneId timezone)` — Creates booking with timezone awareness.
-
-
-#### Usage Scenario
-
-1.  The user sets their preferred timezone: `settimezone Asia/Singapore` <br>
-    <img src="images/TimeZoneSetTimeZoneSequence.png"/> <br>
-
-    **Sequence Diagram for Setting Preferred Timezone**
-
-
-2.  The user creates a booking: `book dt/2025-09-20 10:30 c/Madam Chen n/Bob Lee` <br>
-
-    The system stores the booking in the user's timezone and can display it in other timezones when needed. <br>
-    <img src="images/TimeZoneCreateBookingSequence.png"/> <br>
-
-    **Sequence Diagram for Creating Booking with Timezone Preferences**
-
-
-3.  The user views bookings in a different timezone: `settimezone timezone America/New_York` <br>
-
-    All booking times are automatically converted and displayed in the specified timezone. <br>
-    <img src="images/TimeZoneViewDiffTimezoneSequence.png"/> <br>
-
-    **Sequence Diagram for Viewing Bookings in Different Timezone**
-
-
-#### Design Considerations
-
-**Timezone Storage:**
-
-  - Store all booking datetimes in UTC internally.
-  - Convert to user's preferred timezone for display.
-  - Allow temporary timezone switching for viewing.
-
-**User Preferences:**
-
-  - Store user's default timezone in `UserPrefs`.
-  - Allow timezone changes without affecting existing bookings.
-  - Provide timezone validation and error handling.
-
-**Display Format:**
-
-  - Show timezone information in booking displays.
-  - Provide clear indication when times are converted.
-  - Support multiple timezone formats (e.g., UTC+8, Asia/Singapore).
-
-**Data Migration:**
-
-  - Existing bookings without timezone information default to UTC.
-  - Provide migration tools for existing data.
-  - Maintain backward compatibility.
-
-#### Extensions / Error Cases
-
-  - **Invalid timezone:**
-    Error: "Invalid timezone format. Use format like 'Asia/Singapore' or 'UTC+8'"
-
-  - **Timezone not found:**
-    Error: "Timezone not recognized. Please use a valid timezone identifier"
-
-  - **Conversion errors:**
-    Error: "Unable to convert datetime to specified timezone"
-
-  - **Missing timezone:**
-    Error: "Please set your preferred timezone using 'settimezone' command"
-
----
-
-### \[Proposed\] Find Booking
-
-#### Proposed Implementation
-
-Highlights relevant bookings to users searching by client name using `find`.
-
-**Operations:**
-
-  - `Model#markBookings(Predicate<Person> predicate)` — Mark all relevant bookings that match search criteria
-  - `UI#highlightBookings()` — Highlights all relevant bookings
-
-#### Usage Scenario
-
-1.  The user uses `find` command to search for bookings under a specific client: `find c/Mr Tan` <br>
-    <img src="images/FindBookingbyClientProposedSequence.png"/> <br>
-
-    **Sequence Diagram for Finding Booking by Client Name**
-
-#### Design Considerations
-
-**Display Format:**
-
--  Provide clear indication to the relevant bookings by shifting it to the top of the booking list and with a highlight.
--  Only list contacts with the search criteria.
--  Ensure that all other bookings under the same contact are still present.
-
-**Booking Storage:**
-
--  Ensure that the contents of the booking lists are not modified.
--  Uses a copy of the list of booking to modify the display sequence.
-
-#### Extensions/ Error Cases
-
- - **Date not found:**
-    Error: "No bookings with the input date found."
-
- - **Person not found:**
-    Error: "No searches matching the input name found"
-
----
-
-### \[Proposed\] Toggle Between 24H to 12H Time
-
-#### Proposed Implementation
-
-The time format toggle mechanism allows users to switch between 24-hour and 12-hour (AM/PM) time formats for displaying booking times throughout the application. This provides flexibility for users who prefer different time representations.
-
-**Operations:**
-
-  - `UserPrefs#setTimeFormat(TimeFormat format)` — Sets the user's preferred time format (24H or 12H).
-  - `TimeFormat#format(LocalDateTime dateTime)` — Formats a datetime according to the current preference.
-  - `UI#updateBookingDisplays()` — Updates all booking time displays when format changes.
-  - `Model#getTimeFormat()` — Retrieves the current time format preference.
-
-#### Usage Scenario
-
-1.  The user wants to switch from 24-hour to 12-hour format:
-
-    ```
-    toggleTimeFormat 12h
-    ```
-
-    Or to switch back to 24-hour format:
-
-    ```
-    toggleTimeFormat 24h
-    ```
-
-    The Logic component parses the command and calls:
-
-    ```
-    model.setTimeFormat(TimeFormat.TWELVE_HOUR);
-    ```
-
-    The **Model** updates the `UserPrefs` with the new format preference.
-
-    The **UI** component automatically refreshes all displayed booking times:
-
-    - **Before (24H):** `2025-09-20 14:30`
-    - **After (12H):** `2025-09-20 2:30 PM`
-
-    The **Storage** component saves the preference to `preferences.json` for persistence across sessions.
-
-2.  The user views existing bookings:
-
-    - All booking times in the contact list automatically display in the selected format.
-    - Command outputs (e.g., booking success messages) also use the selected format.
-    - Input format for `book` and `reschedule` commands remains `YYYY-MM-DD HH:MM` (24-hour format) for consistency and clarity.
-
-#### Design Considerations
-
-**Format Storage:**
-  - Store the time format preference in `UserPrefs`.
-  - Persist the preference to `preferences.json` for future sessions.
-  - Default to 24-hour format for new users (matches current input format).
-
-**Display Consistency:**
-  - All datetime displays throughout the application should respect the user's preference.
-  - Booking list, command results, and any UI components showing times should use the selected format.
-  - Input parsing remains unchanged to maintain command consistency.
-
-**Format Conversion:**
-  - Use Java's `DateTimeFormatter` to handle conversion between formats.
-  - Ensure proper AM/PM indicators for 12-hour format.
-  - Handle edge cases (midnight, noon) correctly:
-    - Midnight (00:00) → `12:00 AM`
-    - Noon (12:00) → `12:00 PM`
-    - Afternoon times (13:00-23:59) → `1:00 PM` - `11:59 PM`
-
-**UI Updates:**
-  - Implement observer pattern or event system to notify UI components when format changes.
-  - Update all visible booking displays immediately after format toggle.
-
-**Backward Compatibility:**
-  - Existing bookings stored in the database remain unchanged (still stored as `LocalDateTime`).
-  - Only the display format changes, not the underlying data.
-
-#### Extensions / Error Cases
-
-  - **Invalid format option:**
-    Error: "Invalid time format. Use '24h' or '12h'."
-
-  - **Format already set:**
-    Message: "Time format is already set to 12-hour format." (informational, not an error)
-
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -734,7 +349,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *`  | user                                       | delete a person                                      | remove a people when they exit the team                                |
 | `* * *`  | user                                       | delete a booking                                     | remove specific bookings that have been cancelled                      |
 | `* * *`  | user                                       | find a person by name                                | look up a team member's skillset and current bookings                  |
-| `* * *`  | user                                       | find a person by tag                                 | quickly filter out team memebers with suitable skills for a client     |
+| `* * *`  | user                                       | find a person by tag                                 | quickly filter out team members with suitable skills for a client     |
 | `* * *`  | user                                       | find a person by date                                | see which team members are available to take on a client               |
 | `* * *`  | user                                       | see all the different available team members         | I can see the options for what I need                                  |
 | `* *`    | user                                       | add descriptions to bookings                         | I can add context to assigned bookings                                 |
@@ -753,7 +368,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. FirstImpressions adds person to the list
 4. Use case ends
 
-<img src="images/add-DG.png" alt="add person" width="700">
 
 **Extensions**
 
@@ -798,7 +412,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. FirstImpressions deletes person in the list
 4. Use case ends
 
-<img src="images/delete-DG.png" alt="delete person" width="700">
 
 **Extensions**
 
@@ -823,7 +436,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. FirstImpressions adds booking to team member
 4. Use case ends
 
-<img src="images/book-DG.png" alt="book person" width="700">
 
 **Extensions**
 
@@ -851,7 +463,11 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   FirstImpressions throws error "Parameter [parameter] specified multiple times. Each parameter should appear only once." \
   Use case ends
 
-- 3g. Unknown parameter \
+- 2e. Invalid Date \
+  FirstImpressions throws error "Invalid date "Month [MM] [DD]th [YYYY]", that date does not exist in the (Gregorian) calendar" \
+  Use case ends
+
+- 3e. Unknown parameter \
   FirstImpressions throws error "Unknown parameter: [parameter]. Valid parameters are /d, /c, /p, /desc" \
   Use case ends
 
@@ -948,7 +564,6 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 - **3b.** Valid prefix provided but no parameter (e.g., `find d/`). \
   FirstImpressions lists all persons. Use case continues as in the main scenario. <br>
 
-<img src="images/find-DG.png" width="400px" alt="find person">
 
 ---
 
@@ -963,9 +578,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 2. FirstImpressions shows pop-up menu with all command usage
 3. Use case ends
 
-<img src="images/help-DG.png" alt="help" width="700">
-
-
+---
 
 ### Non-Functional Requirements
 
@@ -979,7 +592,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 8.  UI remains responsive during bulk ops.
 9.  Should perform all writes atomically so that no contact data is lost on crash or power out.
 10. Should autosave any contact creation, edit or delete within 1s of the action.
-11. Should be fully usable with keyboard only.
+11. The system should support efficient keyboard navigation.
 12. Should provide clear error message and guidance on failed import/export.
 13. Should work for x86 and ARM processors without modification.
 14. Should support multiple file types for import and export (CSV/JSON).
@@ -994,6 +607,301 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Team member**: A person recorded in our system
 * **Team manager**: The users of FirstImpressions, who find suitable team members for clients.
 * **Client**: Customers who are finding a specific person who fits certain criteria, which our team managers are finding people for.
+* **Booking**: A scheduled meeting between a Client and a Team Member.
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+## **Appendix: Planned Enhancements**
+
+###  Filter Booking Table for `find`
+
+#### Enhancement Description
+
+Highlights relevant bookings to users searching by client name using `find d/`.
+
+**Operations:**
+
+  - `Model#markBookings(Predicate<Person> predicate)` — Mark all relevant bookings that match search criteria
+  - `UI#highlightBookings()` — Highlights all relevant bookings
+
+#### Usage Scenario
+
+1.  The user uses `find` command to search for bookings under a specific client: `find d/2026-03-25` <br>
+    <img src="images/FindBookingFilter.png"/> <br>
+
+    **Booking Table Highlights Relevant Bookings**
+
+#### Design Considerations
+
+**Display Format:**
+
+-  Provide clear indication to the relevant bookings by shifting it to the top of the booking list and with a highlight.
+-  Only list contacts with the search criteria.
+-  Ensure that all other bookings under the same contact are still present.
+
+**Booking Storage:**
+
+-  Ensure that the contents of the booking lists are not modified.
+-  Uses a copy of the list of booking to modify the display sequence.
+
+#### Extensions/ Error Cases
+
+ - **Date not found:**
+    Error: "No bookings with the input date found."
+
+ - **Invalid Date**
+    Error: "Invalid Date! Must be of the format YYYY-MM-DD"
+
+
+---
+
+
+### Reschedule Date or Time of Current Booking
+
+#### Enhancement Description
+
+The reschedule mechanism allows users to update the datetime of an existing booking. It interacts with the **Model** and **Booking** classes to ensure no conflicts occur.
+
+**Operations:**
+
+  - `Model#rescheduleBooking(Booking booking, LocalDateTime newDateTime)` — Updates the booking with a new datetime after validation.
+  - `Booking#setDateTime(LocalDateTime newDateTime)` — Updates the datetime field of a booking.
+  - Optional undo support: Track changes in `VersionedFirstImpressions` to allow undo/redo of reschedules.
+
+
+#### Usage Scenario
+
+1.  The user views all bookings and identifies one to reschedule (e.g., a booking for Carl Kurz).
+
+2.  Executes the command:
+
+    ```
+     reschedule n/Carl Kurz b/2 dt/2025-10-25 14:00
+    ```
+
+    Where:
+
+    `b/2` = booking ID
+
+    `n/Carl Kurz` = team member name (added for clarity and verification)
+
+    `dt/2025-10-25 14:00` = new datetime
+
+    The Logic component parses the command and calls:
+
+    ```
+     model.rescheduleBooking(selectedBooking, newDateTime);
+    ```
+
+    The **Model** validates:
+
+      - The booking exists (using `b/2`).
+      - The team member name (`n/`) matches the team member in booking `b/2`.
+      - The new datetime does not conflict with other bookings for the same team member.
+      - All parameters are valid (non-null, proper format).
+
+    If validation passes, the booking datetime is updated. Otherwise, an error is thrown (e.g., team member mismatch, conflict, or invalid date).
+
+    The **Logic** component returns a `CommandResult` to the UI:
+
+      - **Success Example:**
+
+        ```
+        Booking rescheduled successfully: Carl Kurz, new datetime: 2025-10-25 14:00
+        ```
+
+      - **Failure Example:** Appropriate error message. <br>
+
+    <img src="images/RescheduleDiagram.png"/> <br>
+
+    **Sequence Diagram for Reschedule Command**
+
+#### Design Considerations
+
+**Conflict Detection:**
+
+  - Ensure the updated datetime does not conflict with other bookings for the same team member.
+  - Conflicts prevent the reschedule.
+
+**Parameter Validation:**
+
+  - Booking ID exists.
+  - Team member name (`n/`) matches the name in the booking. (New consideration)
+
+---
+
+### Edit Current Booking's Clients/Description
+
+#### Enhancement Description
+
+The edit booking mechanism allows users to update the client name or description of an existing booking without changing the datetime. This provides flexibility for booking management.
+
+**Operations:**
+
+  - `Model#editBooking(Booking booking, String newClientName, String newDescription)` — Updates the booking with new client name and/or description.
+  - `Booking#setClientName(String newClientName)` — Updates the client name field of a booking.
+  - `Booking#setDescription(String newDescription)` — Updates the description field of a booking.
+
+
+
+#### Usage Scenario
+
+1.  The user views all bookings and identifies one to edit (e.g., a booking for Carl Kurz).
+
+2.  Executes the command:
+
+    ```
+     editbooking n/Carl Kurz b/2 c/Madam Wong desc/Updated consultation details
+    ```
+
+    Where:
+
+    `b/2` = booking ID
+
+    `n/Carl Kurz` = team member name (for verification)
+
+    `c/Madam Wong` = new client name
+
+    `desc/Updated consultation details` = new description
+
+    The Logic component parses the command and calls:
+
+    ```
+     model.editBooking(selectedBooking, newClientName, newDescription);
+    ```
+
+    The **Model** validates:
+
+      - The booking exists (using booking ID).
+      - The team member name (`n/`) matches the team member in the booking.
+      - At least one field (client name or description) is provided for update.
+      - All parameters are valid (non-null, proper format).
+
+    If validation passes, the booking details are updated. Otherwise, an error is thrown.
+
+    The **Logic** component returns a `CommandResult` to the UI:
+
+      - **Success Example:**
+
+        ```
+        Booking updated successfully: Carl Kurz, Client: Madam Wong, Description: Updated consultation details
+        ```
+
+      - **Failure Example:** Appropriate error message.
+
+    <img src="images/EditBookingProposedSequence.png"/> <br>
+
+    **Sequence Diagram for Edit Booking Command**
+
+#### Design Considerations
+
+**Field Validation:**
+
+  - Client name must follow the same validation rules as new bookings.
+  - Description must follow the same validation rules as new bookings.
+  - At least one field must be provided for update.
+
+**Atomicity:**
+
+  - Edit booking is **all-or-nothing**: either fully applied or not applied at all.
+
+#### Extensions / Error Cases
+
+  - **Booking does not exist:**
+    Error: "Booking ID not found"
+
+  - **No fields to update:**
+    Error: "At least one field (client name or description) must be provided for update"
+
+  - **Invalid client name:**
+    Error: "Invalid client name format"
+
+  - **Invalid description:**
+    Error: "Invalid description format"
+
+  - **Team member mismatch:**
+    Error: "Team member name does not match the booking"
+
+---
+
+### Timezone Support for Scheduled Bookings
+
+#### Enhancement Description
+
+The timezone mechanism allows users to work with bookings across different timezones, making the application suitable for global teams and clients.
+
+**Operations:**
+
+  - `Model#setUserTimezone(ZoneId timezone)` — Sets the user's preferred timezone.
+  - `Booking#getDateTimeInTimezone(ZoneId timezone)` — Returns booking datetime converted to specified timezone.
+  - `Booking#createBookingWithTimezone(String clientName, LocalDateTime datetime, String description, ZoneId timezone)` — Creates booking with timezone awareness.
+
+
+#### Usage Scenario
+
+1.  The user sets their preferred timezone: `settimezone Asia/Singapore` <br>
+    <img src="images/TimeZoneSetTimeZoneSequence.png"/> <br>
+
+    **Sequence Diagram for Setting Preferred Timezone**
+
+
+2.  The user creates a booking: `book dt/2025-09-20 10:30 c/Madam Chen n/Bob Lee` <br>
+
+    The system stores the booking in the user's timezone and can display it in other timezones when needed. <br>
+    <img src="images/TimeZoneCreateBookingSequence.png"/> <br>
+
+    **Sequence Diagram for Creating Booking with Timezone Preferences**
+
+
+3.  The user views bookings in a different timezone: `settimezone timezone America/New_York` <br>
+
+    All booking times are automatically converted and displayed in the specified timezone. <br>
+    <img src="images/TimeZoneViewDiffTimezoneSequence.png"/> <br>
+
+    **Sequence Diagram for Viewing Bookings in Different Timezone**
+
+
+#### Design Considerations
+
+**Timezone Storage:**
+
+  - Store all booking datetimes in UTC internally.
+  - Convert to user's preferred timezone for display.
+  - Allow temporary timezone switching for viewing.
+
+**User Preferences:**
+
+  - Store user's default timezone in `UserPrefs`.
+  - Allow timezone changes without affecting existing bookings.
+  - Provide timezone validation and error handling.
+
+**Display Format:**
+
+  - Show timezone information in booking displays.
+  - Provide clear indication when times are converted.
+  - Support multiple timezone formats (e.g., UTC+8, Asia/Singapore).
+
+**Data Migration:**
+
+  - Existing bookings without timezone information default to UTC.
+  - Provide migration tools for existing data.
+  - Maintain backward compatibility.
+
+#### Extensions / Error Cases
+
+  - **Invalid timezone:**
+    Error: "Invalid timezone format. Use format like 'Asia/Singapore' or 'UTC+8'"
+
+  - **Timezone not found:**
+    Error: "Timezone not recognized. Please use a valid timezone identifier"
+
+  - **Conversion errors:**
+    Error: "Unable to convert datetime to specified timezone"
+
+  - **Missing timezone:**
+    Error: "Please set your preferred timezone using 'settimezone' command"
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -1163,7 +1071,7 @@ testers are expected to do more *exploratory* testing.
 
    1. Close the application.
 
-   2. Delete the `data/addressbook.json` file from the application folder.
+   2. Delete the `data/FirstImpressions.json` file from the application folder.
 
    3. Launch the application again.<br>
       Expected: Application starts with empty data. No error messages.
@@ -1172,7 +1080,7 @@ testers are expected to do more *exploratory* testing.
 
    1. Close the application.
 
-   2. Open `data/addressbook.json` in a text editor and corrupt the JSON format (e.g., remove a closing brace).
+   2. Open `data/FirstImpressions.json` in a text editor and corrupt the JSON format (e.g., remove a closing brace).
 
    3. Launch the application again.<br>
       Expected: Application starts with empty data. Error message logged but application continues to work.
