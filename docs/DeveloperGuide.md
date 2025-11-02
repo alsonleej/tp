@@ -891,6 +891,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Team member**: A person recorded in our system
 * **Team manager**: The users of FirstImpressions, who find suitable team members for clients.
 * **Client**: Customers who are finding a specific person who fits certain criteria, which our team managers are finding people for.
+* **Booking**: A scheduled meeting between a Client and a Team Member.
 
 --------------------------------------------------------------------------------------------------------------------
 
