@@ -68,7 +68,8 @@ public class DeleteCommand extends Command {
     public static final String MESSAGE_DELETE_BOOKING_NOT_FOUND =
             "'%1$s' doesn't have a booking with ID %2$d.\n"
             + "Please check the booking ID and try again.";
-    public static final String MESSAGE_DELETE_BOOKING_USAGE = "Please provide a valid booking ID after 'b/'!";
+    public static final String MESSAGE_DELETE_BOOKING_USAGE = "Please provide a valid booking ID after 'b/'! " +
+            "(Integer value greater than 0!)";
     public static final String MESSAGE_DELETE_BOOKING_OR_TAG =
             "You can only delete either tags (t/) OR bookings (b/), not both at the same time!";
 

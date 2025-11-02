@@ -29,6 +29,10 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
         try {
             ArgumentMultimap multimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_TAG, PREFIX_BOOKING);
             List<String> allNames = multimap.getAllValues(PREFIX_NAME);
+            if (allNames.isEmpty()) {
+                throw new ParseException(
+                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+            }
             if (allNames.size() != 1) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                         "Please provide exactly 1 name only!"));
@@ -50,11 +54,6 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                     .toList();
 
 
-            if (name.isEmpty()) {
-                throw new ParseException(
-                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE.toString()));
-            }
-
             if (!Name.isValidName(name)) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, Name.MESSAGE_CONSTRAINTS));
             }
@@ -66,7 +65,7 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                 String id = multimap.getValue(PREFIX_BOOKING).orElse("").trim();
                 if (id.isEmpty() || !id.matches("^[0-9]+$")) {
                     throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                            DeleteCommand.MESSAGE_DELETE_BOOKING_USAGE) + " (Integer value greater than 0!)");
+                            DeleteCommand.MESSAGE_DELETE_BOOKING_USAGE));
                 }
                 try {
                     int bookingID = Integer.parseInt(id);
