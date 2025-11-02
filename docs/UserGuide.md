@@ -467,7 +467,8 @@ FirstImpressions data are saved automatically as a JSON file `[JAR file location
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
 If your changes to the data file makes its format invalid, FirstImpressions will discard all data and start with an empty data file at the next run. Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the FirstImpressions to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+Furthermore, certain edits can cause the FirstImpressions to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly. <br>
+Names manually edited to include additional spaces, will be normalised to only 1 space between words. This follows the same reasoning of how `add` creates a Person.
 </div>
 
 ## FAQ
