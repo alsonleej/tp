@@ -72,6 +72,8 @@ public class DeleteCommand extends Command {
             + "(Integer value greater than 0!)";
     public static final String MESSAGE_DELETE_BOOKING_OR_TAG =
             "You can only delete either tags (t/) OR bookings (b/), not both at the same time!";
+    public static final String MESSAGE_DELETE_BOOKING_ID_TOO_LARGE =
+            "Booking ID is too large! Use a valid booking ID!";
 
     private static final Logger logger = LogsCenter.getLogger(DeleteCommand.class);
 

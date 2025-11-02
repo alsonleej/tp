@@ -70,7 +70,8 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                 try {
                     int bookingID = Integer.parseInt(id);
                     if (bookingID == 0) {
-                        throw new ParseException("Booking ID cannot be 0!");
+                        throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                                "Booking ID cannot be 0!"));
                     }
                     if (prefixTagExists) {
                         throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
@@ -78,7 +79,8 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                     }
                     return new DeleteCommand(targetName, bookingID);
                 } catch (NumberFormatException e) {
-                    throw new ParseException("Booking ID provided is too large!");
+                    throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                            DeleteCommand.MESSAGE_DELETE_BOOKING_ID_TOO_LARGE));
                 }
             }
 

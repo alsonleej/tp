@@ -51,6 +51,13 @@ public class DeleteCommandParserTest {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, Name.MESSAGE_CONSTRAINTS));
     }
 
+    @Test
+    public void parse_deleteMultipleNames_throwsParseException() {
+        String input = "delete n/Alex Yeoh n/Beatrice Yu";
+        assertParseFailure(parser, input, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                "Please provide exactly 1 name only!"));
+    }
+
     //Tests for parsing tags
     @Test
     public void parse_deleteTag_success() {
@@ -101,6 +108,27 @@ public class DeleteCommandParserTest {
         String input = "delete n/Alex Yeoh b/1 t/1 ";
         assertParseFailure(parser, input, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                 DeleteCommand.MESSAGE_DELETE_BOOKING_OR_TAG));
+    }
+
+    @Test
+    public void parse_deleteBookingNonNumericId_throwsParseException() {
+        String input = "delete n/Alex Yeoh b/abc";
+        assertParseFailure(parser, input, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                DeleteCommand.MESSAGE_DELETE_BOOKING_USAGE));
+    }
+
+    @Test
+    public void parse_deleteBookingIdTooLarge_throwsParseException() {
+        String input = "delete n/Alex Yeoh b/9990239823423487345";
+        assertParseFailure(parser, input, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                DeleteCommand.MESSAGE_DELETE_BOOKING_ID_TOO_LARGE));
+    }
+
+    @Test
+    public void parse_deleteBookingIsZero_throwsParseException() {
+        String input = "delete n/Alex Yeoh b/0";
+        assertParseFailure(parser, input, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                "Booking ID cannot be 0!"));
     }
 
 }
