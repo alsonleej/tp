@@ -748,6 +748,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   FirstImpressions throws error "Parameter [parameter] specified multiple times. Each parameter should appear only once." \
   Use case ends
 
+- 2e. Invalid Date \
+  FirstImpressions throws error "Invalid date "Month [MM] [DD]th [YYYY]", that date does not exist in the (Gregorian) calendar" \
+  Use case ends
+
 - 3e. Unknown parameter \
   FirstImpressions throws error "Unknown parameter: [parameter]. Valid parameters are /d, /c, /p, /desc" \
   Use case ends
