@@ -30,11 +30,6 @@ public class ClientContainsKeywordsPredicate implements Predicate<Person> {
             String fieldType = entry.getKey();
             List<String> keywords = entry.getValue();
 
-            // Empty keyword list = wildcard = match everyone
-            if (keywords.isEmpty()) {
-                return true;
-            }
-
             return switch (fieldType) {
             case "name" -> matchesName(person, keywords);
             case "tag" -> matchesTag(person, keywords);
@@ -45,16 +40,25 @@ public class ClientContainsKeywordsPredicate implements Predicate<Person> {
     }
 
     private boolean matchesName(Person person, List<String> keywords) {
+        if (keywords.isEmpty()) {
+            return true;  // Show everyone when n/ has no parameters
+        }
         String fullName = person.getName().fullName.toLowerCase();
         return keywords.stream().map(String::toLowerCase).anyMatch(fullName::contains);
     }
 
     private boolean matchesTag(Person person, List<String> keywords) {
+        if (keywords.isEmpty()) {
+            return !person.getTags().isEmpty();
+        }
         return keywords.stream().map(String::toLowerCase).anyMatch(kw -> person.getTags().stream()
                                         .map(tag -> tag.tagName.toLowerCase()).anyMatch(tag -> tag.contains(kw)));
     }
 
     private boolean matchesDate(Person person, List<String> keywords) {
+        if (keywords.isEmpty()) {
+            return !person.getBookings().isEmpty();
+        }
         return keywords.stream().anyMatch(dateStr -> person.getBookings().stream().anyMatch(booking -> {
             String bookingDate = booking.getDateTime().toLocalDate().toString();
             return bookingDate.contains(dateStr);
