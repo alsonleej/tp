@@ -222,4 +222,33 @@ public class EditCommandParserTest {
         String longPhone200 = NAME_DESC_AMY + " " + PREFIX_PHONE + "1".repeat(200);
         assertParseFailure(parser, longPhone200, Phone.MESSAGE_LENGTH_CONSTRAINT);
     }
+
+    @Test
+    public void parse_tooManyNames_failure() {
+        // Test edit command with more than 2 name fields (old name + 2 new names)
+        String threeNames = NAME_DESC_AMY + NAME_DESC_BOB + " " + PREFIX_NAME + "Charlie";
+        assertParseFailure(parser, threeNames + PHONE_DESC_AMY,
+                "Too many name fields! \n"
+                + "You can only use up to 2 name (n/) fields: \n"
+                + "one for the person to edit and optionally one for the new name.");
+
+        // Test with 4 names
+        String fourNames = NAME_DESC_AMY + NAME_DESC_BOB + " " + PREFIX_NAME + "Charlie" + " " + PREFIX_NAME + "Dave";
+        assertParseFailure(parser, fourNames,
+                "Too many name fields! \n"
+                + "You can only use up to 2 name (n/) fields: \n"
+                + "one for the person to edit and optionally one for the new name.");
+    }
+
+    @Test
+    public void parse_tooManyTags_failure() {
+        // Test edit command with more than 20 tags
+        StringBuilder commandWithTooManyTags = new StringBuilder(NAME_DESC_AMY);
+        for (int i = 1; i <= 21; i++) {
+            commandWithTooManyTags.append(" ").append(PREFIX_TAG).append("tag").append(i);
+        }
+        assertParseFailure(parser, commandWithTooManyTags.toString(),
+                "Too many tags! \n"
+                + "You can only specify up to 20 tags per person.");
+    }
 }

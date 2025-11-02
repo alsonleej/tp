@@ -60,7 +60,7 @@ public class EditCommand extends Command {
             + "Please use a different name or edit the existing contact.";
     public static final String MESSAGE_PERSON_NOT_FOUND =
             "Could not find a person named '%1$s' in your address book.\n"
-            + "Please check the spelling and try again.";
+            + "Please check the spelling (case-sensitive) and try again!";
 
     private static final Logger logger = LogsCenter.getLogger(EditCommand.class);
 

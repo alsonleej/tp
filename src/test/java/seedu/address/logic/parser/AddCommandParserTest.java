@@ -206,4 +206,16 @@ public class AddCommandParserTest {
         assertParseFailure(parser, NAME_DESC_BOB + longPhone200,
                 Phone.MESSAGE_LENGTH_CONSTRAINT);
     }
+
+    @Test
+    public void parse_tooManyTags_failure() {
+        // Test add command with more than 20 tags
+        StringBuilder command = new StringBuilder(NAME_DESC_BOB);
+        for (int i = 1; i <= 21; i++) {
+            command.append(" t/tag").append(i);
+        }
+        assertParseFailure(parser, command.toString(),
+                "Tag limit reached for Bob Choo. Maximum 20 tags allowed. "
+                + "Remove existing tags before adding new ones.");
+    }
 }
