@@ -18,10 +18,7 @@ title: Developer Guide
   * [Design Choices](#design-choices)
 * [Proposed Features](#proposed-features)
   * [[Proposed] Undo/redo feature](#proposed-undoredo-feature)
-  * [[Proposed] Reschedule Booking](#proposed-reschedule-booking)
-  * [[Proposed] Edit Booking Clients/Description](#proposed-edit-booking-clientsdescription)
   * [[Proposed] Timezone Support](#proposed-timezone-support)
-  * [[Proposed] Find Booking](#proposed-find-booking)
 * [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 * [Appendix: Requirements](#appendix-requirements)
   * [Product scope](#product-scope)
@@ -394,221 +391,6 @@ The timezone mechanism allows users to work with bookings across different timez
 
 --------------------------------------------------------------------------------------------------------------------
 
-## **Appendix: Planned Enhancements**
-
-
-###  Filter Booking Table for `find`
-
-#### Enhancement Description
-
-Highlights relevant bookings to users searching by client name using `find d/`.
-
-**Operations:**
-
-  - `Model#markBookings(Predicate<Person> predicate)` — Mark all relevant bookings that match search criteria
-  - `UI#highlightBookings()` — Highlights all relevant bookings
-
-#### Usage Scenario
-
-1.  The user uses `find` command to search for bookings under a specific client: `find d/2026-03-25` <br>
-    <img src="images/FindBookingFilter.png"/> <br>
-
-    **Booking Table Highlights Relevant Bookings**
-
-#### Design Considerations
-
-**Display Format:**
-
--  Provide clear indication to the relevant bookings by shifting it to the top of the booking list and with a highlight.
--  Only list contacts with the search criteria.
--  Ensure that all other bookings under the same contact are still present.
-
-**Booking Storage:**
-
--  Ensure that the contents of the booking lists are not modified.
--  Uses a copy of the list of booking to modify the display sequence.
-
-#### Extensions/ Error Cases
-
- - **Date not found:**
-    Error: "No bookings with the input date found."
-
- - **Invalid Date**
-    Error: "Invalid Date! Must be of the format YYYY-MM-DD"
-
-
----
-
-
-### Reschedule Date or Time of Current Booking
-
-#### Enhancement Description
-
-The reschedule mechanism allows users to update the datetime of an existing booking. It interacts with the **Model** and **Booking** classes to ensure no conflicts occur.
-
-**Operations:**
-
-  - `Model#rescheduleBooking(Booking booking, LocalDateTime newDateTime)` — Updates the booking with a new datetime after validation.
-  - `Booking#setDateTime(LocalDateTime newDateTime)` — Updates the datetime field of a booking.
-  - Optional undo support: Track changes in `VersionedFirstImpressions` to allow undo/redo of reschedules.
-
-
-#### Usage Scenario
-
-1.  The user views all bookings and identifies one to reschedule (e.g., a booking for Carl Kurz).
-
-2.  Executes the command:
-
-    ```
-     reschedule n/Carl Kurz b/2 dt/2025-10-25 14:00
-    ```
-
-    Where:
-
-    `b/2` = booking ID
-
-    `n/Carl Kurz` = team member name (added for clarity and verification)
-
-    `dt/2025-10-25 14:00` = new datetime
-
-    The Logic component parses the command and calls:
-
-    ```
-     model.rescheduleBooking(selectedBooking, newDateTime);
-    ```
-
-    The **Model** validates:
-
-      - The booking exists (using `b/2`).
-      - The team member name (`n/`) matches the team member in booking `b/2`.
-      - The new datetime does not conflict with other bookings for the same team member.
-      - All parameters are valid (non-null, proper format).
-
-    If validation passes, the booking datetime is updated. Otherwise, an error is thrown (e.g., team member mismatch, conflict, or invalid date).
-
-    The **Logic** component returns a `CommandResult` to the UI:
-
-      - **Success Example:**
-
-        ```
-        Booking rescheduled successfully: Carl Kurz, new datetime: 2025-10-25 14:00
-        ```
-
-      - **Failure Example:** Appropriate error message. <br>
-
-    <img src="images/RescheduleDiagram.png"/> <br>
-
-    **Sequence Diagram for Reschedule Command**
-
-#### Design Considerations
-
-**Conflict Detection:**
-
-  - Ensure the updated datetime does not conflict with other bookings for the same team member.
-  - Conflicts prevent the reschedule.
-
-**Parameter Validation:**
-
-  - Booking ID exists.
-  - Team member name (`n/`) matches the name in the booking. (New consideration)
-
----
-
-### Edit Current Booking's Clients/Description
-
-#### Enhancement Description
-
-The edit booking mechanism allows users to update the client name or description of an existing booking without changing the datetime. This provides flexibility for booking management.
-
-**Operations:**
-
-  - `Model#editBooking(Booking booking, String newClientName, String newDescription)` — Updates the booking with new client name and/or description.
-  - `Booking#setClientName(String newClientName)` — Updates the client name field of a booking.
-  - `Booking#setDescription(String newDescription)` — Updates the description field of a booking.
-
-
-
-#### Usage Scenario
-
-1.  The user views all bookings and identifies one to edit (e.g., a booking for Carl Kurz).
-
-2.  Executes the command:
-
-    ```
-     editbooking n/Carl Kurz b/2 c/Madam Wong desc/Updated consultation details
-    ```
-
-    Where:
-
-    `b/2` = booking ID
-
-    `n/Carl Kurz` = team member name (for verification)
-
-    `c/Madam Wong` = new client name
-
-    `desc/Updated consultation details` = new description
-
-    The Logic component parses the command and calls:
-
-    ```
-     model.editBooking(selectedBooking, newClientName, newDescription);
-    ```
-
-    The **Model** validates:
-
-      - The booking exists (using booking ID).
-      - The team member name (`n/`) matches the team member in the booking.
-      - At least one field (client name or description) is provided for update.
-      - All parameters are valid (non-null, proper format).
-
-    If validation passes, the booking details are updated. Otherwise, an error is thrown.
-
-    The **Logic** component returns a `CommandResult` to the UI:
-
-      - **Success Example:**
-
-        ```
-        Booking updated successfully: Carl Kurz, Client: Madam Wong, Description: Updated consultation details
-        ```
-
-      - **Failure Example:** Appropriate error message.
-
-    <img src="images/EditBookingProposedSequence.png"/> <br>
-
-    **Sequence Diagram for Edit Booking Command**
-
-#### Design Considerations
-
-**Field Validation:**
-
-  - Client name must follow the same validation rules as new bookings.
-  - Description must follow the same validation rules as new bookings.
-  - At least one field must be provided for update.
-
-**Atomicity:**
-
-  - Edit booking is **all-or-nothing**: either fully applied or not applied at all.
-
-#### Extensions / Error Cases
-
-  - **Booking does not exist:**
-    Error: "Booking ID not found"
-
-  - **No fields to update:**
-    Error: "At least one field (client name or description) must be provided for update"
-
-  - **Invalid client name:**
-    Error: "Invalid client name format"
-
-  - **Invalid description:**
-    Error: "Invalid description format"
-
-  - **Team member mismatch:**
-    Error: "Team member name does not match the booking"
-
---------------------------------------------------------------------------------------------------------------------
-
-
 ## **Appendix: Requirements**
 
 ### Product scope
@@ -887,6 +669,220 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Team manager**: The users of FirstImpressions, who find suitable team members for clients.
 * **Client**: Customers who are finding a specific person who fits certain criteria, which our team managers are finding people for.
 * **Booking**: A scheduled meeting between a Client and a Team Member.
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+## **Appendix: Planned Enhancements**
+
+###  Filter Booking Table for `find`
+
+#### Enhancement Description
+
+Highlights relevant bookings to users searching by client name using `find d/`.
+
+**Operations:**
+
+  - `Model#markBookings(Predicate<Person> predicate)` — Mark all relevant bookings that match search criteria
+  - `UI#highlightBookings()` — Highlights all relevant bookings
+
+#### Usage Scenario
+
+1.  The user uses `find` command to search for bookings under a specific client: `find d/2026-03-25` <br>
+    <img src="images/FindBookingFilter.png"/> <br>
+
+    **Booking Table Highlights Relevant Bookings**
+
+#### Design Considerations
+
+**Display Format:**
+
+-  Provide clear indication to the relevant bookings by shifting it to the top of the booking list and with a highlight.
+-  Only list contacts with the search criteria.
+-  Ensure that all other bookings under the same contact are still present.
+
+**Booking Storage:**
+
+-  Ensure that the contents of the booking lists are not modified.
+-  Uses a copy of the list of booking to modify the display sequence.
+
+#### Extensions/ Error Cases
+
+ - **Date not found:**
+    Error: "No bookings with the input date found."
+
+ - **Invalid Date**
+    Error: "Invalid Date! Must be of the format YYYY-MM-DD"
+
+
+---
+
+
+### Reschedule Date or Time of Current Booking
+
+#### Enhancement Description
+
+The reschedule mechanism allows users to update the datetime of an existing booking. It interacts with the **Model** and **Booking** classes to ensure no conflicts occur.
+
+**Operations:**
+
+  - `Model#rescheduleBooking(Booking booking, LocalDateTime newDateTime)` — Updates the booking with a new datetime after validation.
+  - `Booking#setDateTime(LocalDateTime newDateTime)` — Updates the datetime field of a booking.
+  - Optional undo support: Track changes in `VersionedFirstImpressions` to allow undo/redo of reschedules.
+
+
+#### Usage Scenario
+
+1.  The user views all bookings and identifies one to reschedule (e.g., a booking for Carl Kurz).
+
+2.  Executes the command:
+
+    ```
+     reschedule n/Carl Kurz b/2 dt/2025-10-25 14:00
+    ```
+
+    Where:
+
+    `b/2` = booking ID
+
+    `n/Carl Kurz` = team member name (added for clarity and verification)
+
+    `dt/2025-10-25 14:00` = new datetime
+
+    The Logic component parses the command and calls:
+
+    ```
+     model.rescheduleBooking(selectedBooking, newDateTime);
+    ```
+
+    The **Model** validates:
+
+      - The booking exists (using `b/2`).
+      - The team member name (`n/`) matches the team member in booking `b/2`.
+      - The new datetime does not conflict with other bookings for the same team member.
+      - All parameters are valid (non-null, proper format).
+
+    If validation passes, the booking datetime is updated. Otherwise, an error is thrown (e.g., team member mismatch, conflict, or invalid date).
+
+    The **Logic** component returns a `CommandResult` to the UI:
+
+      - **Success Example:**
+
+        ```
+        Booking rescheduled successfully: Carl Kurz, new datetime: 2025-10-25 14:00
+        ```
+
+      - **Failure Example:** Appropriate error message. <br>
+
+    <img src="images/RescheduleDiagram.png"/> <br>
+
+    **Sequence Diagram for Reschedule Command**
+
+#### Design Considerations
+
+**Conflict Detection:**
+
+  - Ensure the updated datetime does not conflict with other bookings for the same team member.
+  - Conflicts prevent the reschedule.
+
+**Parameter Validation:**
+
+  - Booking ID exists.
+  - Team member name (`n/`) matches the name in the booking. (New consideration)
+
+---
+
+### Edit Current Booking's Clients/Description
+
+#### Enhancement Description
+
+The edit booking mechanism allows users to update the client name or description of an existing booking without changing the datetime. This provides flexibility for booking management.
+
+**Operations:**
+
+  - `Model#editBooking(Booking booking, String newClientName, String newDescription)` — Updates the booking with new client name and/or description.
+  - `Booking#setClientName(String newClientName)` — Updates the client name field of a booking.
+  - `Booking#setDescription(String newDescription)` — Updates the description field of a booking.
+
+
+
+#### Usage Scenario
+
+1.  The user views all bookings and identifies one to edit (e.g., a booking for Carl Kurz).
+
+2.  Executes the command:
+
+    ```
+     editbooking n/Carl Kurz b/2 c/Madam Wong desc/Updated consultation details
+    ```
+
+    Where:
+
+    `b/2` = booking ID
+
+    `n/Carl Kurz` = team member name (for verification)
+
+    `c/Madam Wong` = new client name
+
+    `desc/Updated consultation details` = new description
+
+    The Logic component parses the command and calls:
+
+    ```
+     model.editBooking(selectedBooking, newClientName, newDescription);
+    ```
+
+    The **Model** validates:
+
+      - The booking exists (using booking ID).
+      - The team member name (`n/`) matches the team member in the booking.
+      - At least one field (client name or description) is provided for update.
+      - All parameters are valid (non-null, proper format).
+
+    If validation passes, the booking details are updated. Otherwise, an error is thrown.
+
+    The **Logic** component returns a `CommandResult` to the UI:
+
+      - **Success Example:**
+
+        ```
+        Booking updated successfully: Carl Kurz, Client: Madam Wong, Description: Updated consultation details
+        ```
+
+      - **Failure Example:** Appropriate error message.
+
+    <img src="images/EditBookingProposedSequence.png"/> <br>
+
+    **Sequence Diagram for Edit Booking Command**
+
+#### Design Considerations
+
+**Field Validation:**
+
+  - Client name must follow the same validation rules as new bookings.
+  - Description must follow the same validation rules as new bookings.
+  - At least one field must be provided for update.
+
+**Atomicity:**
+
+  - Edit booking is **all-or-nothing**: either fully applied or not applied at all.
+
+#### Extensions / Error Cases
+
+  - **Booking does not exist:**
+    Error: "Booking ID not found"
+
+  - **No fields to update:**
+    Error: "At least one field (client name or description) must be provided for update"
+
+  - **Invalid client name:**
+    Error: "Invalid client name format"
+
+  - **Invalid description:**
+    Error: "Invalid description format"
+
+  - **Team member mismatch:**
+    Error: "Team member name does not match the booking"
 
 --------------------------------------------------------------------------------------------------------------------
 
