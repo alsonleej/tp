@@ -558,13 +558,27 @@ The timezone mechanism allows users to work with bookings across different timez
   - **Missing timezone:**
     Error: "Please set your preferred timezone using 'settimezone' command"
 
----
 
-### \[Proposed\] Find Booking
+--------------------------------------------------------------------------------------------------------------------
 
-#### Proposed Implementation
+## **Documentation, logging, testing, configuration, dev-ops**
 
-Highlights relevant bookings to users searching by client name using `find`.
+* [Documentation guide](Documentation.md)
+* [Testing guide](Testing.md)
+* [Logging guide](Logging.md)
+* [Configuration guide](Configuration.md)
+* [DevOps guide](DevOps.md)
+
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Planned Enhancements**
+
+
+###  Filter Booking Table for `find`
+
+#### Enhancement Description
+
+Highlights relevant bookings to users searching by client name using `find d/`.
 
 **Operations:**
 
@@ -573,10 +587,10 @@ Highlights relevant bookings to users searching by client name using `find`.
 
 #### Usage Scenario
 
-1.  The user uses `find` command to search for bookings under a specific client: `find c/Mr Tan` <br>
-    <img src="images/FindBookingbyClientProposedSequence.png"/> <br>
+1.  The user uses `find` command to search for bookings under a specific client: `find d/2026-03-25` <br>
+    <img src="images/FindBookingFilter.png"/> <br>
 
-    **Sequence Diagram for Finding Booking by Client Name**
+    **Booking Table Highlights Relevant Bookings**
 
 #### Design Considerations
 
@@ -596,21 +610,11 @@ Highlights relevant bookings to users searching by client name using `find`.
  - **Date not found:**
     Error: "No bookings with the input date found."
 
- - **Person not found:**
-    Error: "No searches matching the input name found"
-
-
---------------------------------------------------------------------------------------------------------------------
-
-## **Documentation, logging, testing, configuration, dev-ops**
-
-* [Documentation guide](Documentation.md)
-* [Testing guide](Testing.md)
-* [Logging guide](Logging.md)
-* [Configuration guide](Configuration.md)
-* [DevOps guide](DevOps.md)
+ - **Invalid Date**
+    Error: "Invalid Date! Must be of the format YYYY-MM-DD"
 
 --------------------------------------------------------------------------------------------------------------------
+
 
 ## **Appendix: Requirements**
 
@@ -839,7 +843,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends.
 
 - **1b.** Invalid date format provided. \
-  FirstImpressions displays an error: "Invalid date!" \
+  FirstImpressions displays an error: "Invalid date! Must be of the format YYYY-MM-DD" \
   Use case ends.
 
 - **3a.** No persons match the search criteria. \
