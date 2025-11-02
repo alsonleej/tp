@@ -47,9 +47,12 @@ public class AddCommandParser implements Parser<AddCommand> {
                 : null;
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
 
-        Person person = new Person(name, phone, email, tagList);
-
-        return new AddCommand(person);
+        try {
+            Person person = new Person(name, phone, email, tagList);
+            return new AddCommand(person);
+        } catch (IllegalArgumentException e) {
+            throw new ParseException(e.getMessage());
+        }
     }
 
     /**
