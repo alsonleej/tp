@@ -462,7 +462,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends
 
 - 2g. Unknown parameter \
-  FirstImpressions throws error "Unknown parameter: [parameter]. Valid parameters are /d, /c, /p, /desc" \
+  FirstImpressions throws error "Unknown parameter: [parameter]. Valid parameters are d/, c/, p/, desc/" \
   Use case ends
 
 
