@@ -31,7 +31,7 @@ public class Name {
         requireNonNull(name);
         checkArgument(isValidName(name), MESSAGE_CONSTRAINTS);
         checkArgument(name.length() <= MAX_NAME_LENGTH, MESSAGE_LENGTH_CONSTRAINT);
-        fullName = name;
+        fullName = name.replaceAll("\\s+", " ");
     }
 
     /**
