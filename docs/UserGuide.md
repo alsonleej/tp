@@ -185,7 +185,7 @@ Format: `add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
 Duplicate names are not allowed. Each person in the contact list must have a unique name. <br>
 In this case, try customising the names in a way that is easily identifiable to you! <br>
-For example: 1-Alice Tan, 2-Alice Tan
+For example: Alice Tan - Glasses, Alice Tan - No Glasses
 </div>
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Warning:**
@@ -209,16 +209,21 @@ Examples:
 <img src="images/addMessage-UG.png" width="700px" alt="add message"> <br>
 *Figure 2: Adding a new person to the contact list*
 
-### Adding a tag to an existing person: `add`
+### Adding tags to an existing person: `add`
 
-Adds a tag to an existing person.
+Adds tags to an existing person.
 
 Format: `add n/NAME t/TAG…​`
 
 * Consecutive spaces in name are removed. e.g. "Alice&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tan" will be read as `Alice Tan`.
-* Multiple  tags can be added at once by prefixing each tag with `t/`.
+* Multiple tags can be added at once by prefixing each tag with `t/`.
 * Tags must contain only letters and numbers, without spaces.
 * If person does not already exist in FirstImpressions, the person is created.
+
+<div markdown="span" class="alert alert-warning">:exclamation: **Warning:** Names used here must be case-sensitive! <br>
+`add n/Alice tan t/closer` will not add tags to `Alice Tan`. Use the exact name as shown in the contact list. <br>
+If the name does not match a current name in the contact list, a new Person will be created.
+</div>
 
 Examples:
 
@@ -271,7 +276,7 @@ Edits the phone number of `Alice Tan` to be `+1 (555) 123-4567`. <br>
 <img src="images/editMessage-UG.png" width="700px" alt="edit message"> <br>
 *Figure 5: Success message after editing a person's details*
 
-### Locating team members by name: `find`
+### Searching for persons or bookings : `find`
 
 The `find` command offers a flexible way for users to filter the contact list by **name**, **tag**, and **scheduled date of bookings**. <br>
 
@@ -508,7 +513,7 @@ If you do want an empty phone number, set the phone number to "-"!
 Action | Format, Examples
 --------|------------------
 **Help** | `help`
-**Add** | `add n/NAME p/PHONE_NUMBER e/EMAIL [t/TAG]…​` <br> e.g., `add n/Alice Tan p/98702930 e/alicetan@gmail.com t/teamLead t/vipHandler`
+**Add** | `add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​` <br> e.g., `add n/Alice Tan p/98702930 e/alicetan@gmail.com t/teamLead t/vipHandler`
 **List** | `list`
 **Edit** | `edit n/OLD_NAME [n/NEW_NAME] [p/PHONE_NUMBER] [e/EMAIL] [t/TAG]…​`<br> e.g.,`edit n/John Doe n/Jane Doe p/91234567 e/janedoe@example.com`
 **Find** | `find n/NAME` or `find t/TAG1 [t/TAG2]…` or `find d/DATE1 [d/DATE2]…`<br> e.g., `find n/John` or `find d/2025-08-18`
