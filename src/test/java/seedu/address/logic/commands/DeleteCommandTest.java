@@ -343,6 +343,68 @@ public class DeleteCommandTest {
                 "EXPECTED: Remaining booking should be past (but bug causes it to be future)");
     }
 
+    @Test
+    public void execute_deleteBooking_negativeID() throws CommandException {
+        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+
+        Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        //Create new booking
+        LocalDateTime targetTiming = LocalDateTime.of(3000, 10, 10, 10, 10);
+        Booking booking = new Booking("mr tan", targetTiming, "meeting");
+
+        List<Booking> targetBooking = List.of(booking);
+
+        //Add booking to target
+        Person newPerson = new Person(
+                target.getName(),
+                target.getPhone(),
+                target.getEmail(),
+                target.getTags(),
+                targetBooking
+        );
+        model.setPerson(target, newPerson);
+
+        //Attempt to delete a booking
+        DeleteCommand deleteCommand = new DeleteCommand(newPerson.getName(), -1);
+
+        assertThrows(CommandException.class, () -> deleteCommand.execute(model));
+    }
+
+    @Test
+    public void execute_deleteBooking_verySimilarNames() throws CommandException {
+        showPersonAtIndex(model, INDEX_FIRST_PERSON);
+
+        Name first = new Name("Alex Yeoh");
+        Name second = new Name("Alex G Yeoh");
+
+        Person target = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+
+        Person firstPerson = new Person(
+                first,
+                target.getPhone(),
+                target.getEmail(),
+                target.getTags(),
+                target.getBookings()
+        );
+
+        Person secondPerson = new Person(
+                second,
+                target.getPhone(),
+                target.getEmail(),
+                target.getTags(),
+                target.getBookings()
+        );
+
+        model.addPerson(firstPerson);
+        model.addPerson(secondPerson);
+
+        //Attempt to delete person with typo
+        DeleteCommand deleteCommand = new DeleteCommand(new Name("Alex  Yeoh"), 2);
+
+        assertThrows(CommandException.class, () -> deleteCommand.execute(model));
+    }
+
 
 
     @Test

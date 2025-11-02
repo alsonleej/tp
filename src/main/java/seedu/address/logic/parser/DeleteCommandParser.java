@@ -28,7 +28,16 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
     public DeleteCommand parse(String args) throws ParseException {
         try {
             ArgumentMultimap multimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_TAG, PREFIX_BOOKING);
-            String name = multimap.getValue(PREFIX_NAME).orElse("").trim();
+            List<String> allNames = multimap.getAllValues(PREFIX_NAME);
+            if (allNames.isEmpty()) {
+                throw new ParseException(
+                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+            }
+            if (allNames.size() != 1) {
+                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                        "Please provide exactly 1 name only!"));
+            }
+            String name = allNames.get(0);
             List<String> allTags = multimap.getAllValues(PREFIX_TAG);
 
             for (String raw : allTags) {
@@ -45,11 +54,6 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
                     .toList();
 
 
-            if (name.isEmpty()) {
-                throw new ParseException(
-                        String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE.toString()));
-            }
-
             if (!Name.isValidName(name)) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, Name.MESSAGE_CONSTRAINTS));
             }
@@ -59,16 +63,25 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
             if (multimap.getValue(PREFIX_BOOKING).isPresent()) {
                 String id = multimap.getValue(PREFIX_BOOKING).orElse("").trim();
-                if (id.isEmpty()) {
+                if (id.isEmpty() || !id.matches("^[0-9]+$")) {
                     throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                             DeleteCommand.MESSAGE_DELETE_BOOKING_USAGE));
                 }
-                Integer bookingID = Integer.valueOf(id);
-                if (prefixTagExists) {
+                try {
+                    int bookingID = Integer.parseInt(id);
+                    if (bookingID == 0) {
+                        throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                                "Booking ID cannot be 0!"));
+                    }
+                    if (prefixTagExists) {
+                        throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                                DeleteCommand.MESSAGE_DELETE_BOOKING_OR_TAG));
+                    }
+                    return new DeleteCommand(targetName, bookingID);
+                } catch (NumberFormatException e) {
                     throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                            DeleteCommand.MESSAGE_DELETE_BOOKING_OR_TAG));
+                            DeleteCommand.MESSAGE_DELETE_BOOKING_ID_TOO_LARGE));
                 }
-                return new DeleteCommand(targetName, bookingID);
             }
 
             if (rawTags.isEmpty()) {

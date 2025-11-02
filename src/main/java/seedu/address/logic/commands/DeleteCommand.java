@@ -68,9 +68,12 @@ public class DeleteCommand extends Command {
     public static final String MESSAGE_DELETE_BOOKING_NOT_FOUND =
             "'%1$s' doesn't have a booking with ID %2$d.\n"
             + "Please check the booking ID and try again.";
-    public static final String MESSAGE_DELETE_BOOKING_USAGE = "Please provide a valid booking ID after 'b/'!";
+    public static final String MESSAGE_DELETE_BOOKING_USAGE = "Please provide a valid booking ID after 'b/'! "
+            + "(Integer value greater than 0!)";
     public static final String MESSAGE_DELETE_BOOKING_OR_TAG =
             "You can only delete either tags (t/) OR bookings (b/), not both at the same time!";
+    public static final String MESSAGE_DELETE_BOOKING_ID_TOO_LARGE =
+            "Booking ID is too large! Use a valid booking ID!";
 
     private static final Logger logger = LogsCenter.getLogger(DeleteCommand.class);
 
@@ -113,6 +116,10 @@ public class DeleteCommand extends Command {
         List<Person> lastShownList = model.getFilteredPersonList();
 
         Person personToDelete = findUniquePerson(lastShownList, targetName);
+
+        if (targetBooking < 0) {
+            throw new CommandException("Booking ID must be a valid positive integer!");
+        }
 
         if (targetBooking > 0) {
             List<Booking> bookingList = personToDelete.getBookings();
@@ -264,11 +271,10 @@ public class DeleteCommand extends Command {
     }
 
     private Person findUniquePerson(List<Person> list, Name targetName) throws CommandException {
-        String queryName = targetName.toString().trim().replaceAll("\\s+", " ");
+        String queryName = targetName.toString();
 
         List<Person> exactMatch = list.stream()
-                .filter(x -> x.getName().toString().replaceAll("\\s+", " ")
-                        .equals(queryName))
+                .filter(x -> x.getName().toString().equals(queryName))
                 .toList();
         if (exactMatch.size() == 1) {
             logger.fine(String.format("Found exact match for person: %s", targetName.fullName));
@@ -285,7 +291,7 @@ public class DeleteCommand extends Command {
 
         List<Person> contains = list.stream()
                 .filter(x -> x.getName().toString().replaceAll("\\s+", " ")
-                        .contains(queryName))
+                .contains(queryName.replaceAll("\\s+", " ")))
                 .toList();
         if (contains.size() == 1) {
             logger.fine(String.format("Found partial match for person: %s", targetName.fullName));
