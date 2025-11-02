@@ -45,11 +45,24 @@ public class EditCommandParser implements Parser<EditCommand> {
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE.toString()));
         }
 
+        if (nameValues.size() > 2) {
+            throw new ParseException("Too many name fields! \n"
+                    + "You can only use up to 2 name (n/) fields: \n"
+                    + "one for the person to edit and optionally one for the new name.");
+        }
+
         // The first name is the old name (person to edit)
         Name oldName = ParserUtil.parseName(nameValues.get(0));
         assert oldName != null : "Old name should not be null after parsing";
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_PHONE, PREFIX_EMAIL);
+
+        // Validate tag count
+        List<String> tagValues = argMultimap.getAllValues(PREFIX_TAG);
+        if (tagValues.size() > 20) {
+            throw new ParseException("Too many tags! \n"
+                    + "You can only specify up to 20 tags per person.");
+        }
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
         assert editPersonDescriptor != null : "Edit person descriptor should not be null";
