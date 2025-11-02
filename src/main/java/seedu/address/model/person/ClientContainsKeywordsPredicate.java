@@ -41,7 +41,7 @@ public class ClientContainsKeywordsPredicate implements Predicate<Person> {
 
     private boolean matchesName(Person person, List<String> keywords) {
         if (keywords.isEmpty()) {
-            return true;  // Show everyone when n/ has no parameters
+            return true;
         }
         String fullName = person.getName().fullName.toLowerCase();
         return keywords.stream().map(String::toLowerCase).anyMatch(fullName::contains);

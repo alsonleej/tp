@@ -26,6 +26,7 @@ title: Developer Guide
   * [Use cases](#use-cases)
   * [Non-Functional Requirements](#non-functional-requirements)
   * [Glossary](#glossary)
+* [Appendix: Planned Enhancements](#appendix-planned-enhancements)
 * [Appendix: Instructions for manual testing](#appendix-instructions-for-manual-testing)
 
 </div>
