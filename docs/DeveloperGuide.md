@@ -1,4 +1,4 @@
----
+﻿---
 layout: page
 title: Developer Guide
 ---
@@ -22,6 +22,7 @@ title: Developer Guide
   * [[Proposed] Edit Booking Clients/Description](#proposed-edit-booking-clientsdescription)
   * [[Proposed] Timezone Support](#proposed-timezone-support)
   * [[Proposed] Find Booking](#proposed-find-booking)
+  * [[Proposed] Toggle Between 24H to 12H Time](#proposed-toggle-between-24h-to-12h-time)
 * [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 * [Appendix: Requirements](#appendix-requirements)
   * [Product scope](#product-scope)
@@ -471,7 +472,7 @@ The edit booking mechanism allows users to update the client name or description
     Error: "At least one field (client name or description) must be provided for update"
 
   - **Invalid client name:**
-    Error: "Invalid client name format"
+    Error: "Client name should not be blank and must be 100 characters or less."
 
   - **Invalid description:**
     Error: "Invalid description format"
@@ -599,6 +600,92 @@ Highlights relevant bookings to users searching by client name using `find`.
  - **Person not found:**
     Error: "No searches matching the input name found"
 
+---
+
+### \[Proposed\] Toggle Between 24H to 12H Time
+
+#### Proposed Implementation
+
+The time format toggle mechanism allows users to switch between 24-hour and 12-hour (AM/PM) time formats for displaying booking times throughout the application. This provides flexibility for users who prefer different time representations.
+
+**Operations:**
+
+  - `UserPrefs#setTimeFormat(TimeFormat format)` — Sets the user's preferred time format (24H or 12H).
+  - `TimeFormat#format(LocalDateTime dateTime)` — Formats a datetime according to the current preference.
+  - `UI#updateBookingDisplays()` — Updates all booking time displays when format changes.
+  - `Model#getTimeFormat()` — Retrieves the current time format preference.
+
+#### Usage Scenario
+
+1.  The user wants to switch from 24-hour to 12-hour format:
+
+    ```
+    toggleTimeFormat 12h
+    ```
+
+    Or to switch back to 24-hour format:
+
+    ```
+    toggleTimeFormat 24h
+    ```
+
+    The Logic component parses the command and calls:
+
+    ```
+    model.setTimeFormat(TimeFormat.TWELVE_HOUR);
+    ```
+
+    The **Model** updates the `UserPrefs` with the new format preference.
+
+    The **UI** component automatically refreshes all displayed booking times:
+
+    - **Before (24H):** `2025-09-20 14:30`
+    - **After (12H):** `2025-09-20 2:30 PM`
+
+    The **Storage** component saves the preference to `preferences.json` for persistence across sessions.
+
+2.  The user views existing bookings:
+
+    - All booking times in the contact list automatically display in the selected format.
+    - Command outputs (e.g., booking success messages) also use the selected format.
+    - Input format for `book` and `reschedule` commands remains `YYYY-MM-DD HH:MM` (24-hour format) for consistency and clarity.
+
+#### Design Considerations
+
+**Format Storage:**
+  - Store the time format preference in `UserPrefs`.
+  - Persist the preference to `preferences.json` for future sessions.
+  - Default to 24-hour format for new users (matches current input format).
+
+**Display Consistency:**
+  - All datetime displays throughout the application should respect the user's preference.
+  - Booking list, command results, and any UI components showing times should use the selected format.
+  - Input parsing remains unchanged to maintain command consistency.
+
+**Format Conversion:**
+  - Use Java's `DateTimeFormatter` to handle conversion between formats.
+  - Ensure proper AM/PM indicators for 12-hour format.
+  - Handle edge cases (midnight, noon) correctly:
+    - Midnight (00:00) → `12:00 AM`
+    - Noon (12:00) → `12:00 PM`
+    - Afternoon times (13:00-23:59) → `1:00 PM` - `11:59 PM`
+
+**UI Updates:**
+  - Implement observer pattern or event system to notify UI components when format changes.
+  - Update all visible booking displays immediately after format toggle.
+
+**Backward Compatibility:**
+  - Existing bookings stored in the database remain unchanged (still stored as `LocalDateTime`).
+  - Only the display format changes, not the underlying data.
+
+#### Extensions / Error Cases
+
+  - **Invalid format option:**
+    Error: "Invalid time format. Use '24h' or '12h'."
+
+  - **Format already set:**
+    Message: "Time format is already set to 12-hour format." (informational, not an error)
+
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -678,16 +765,24 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
     FirstImpressions throws error "Name too long" \
     Use case ends
 
- - 2c. Invalid name characters \
-    FirstImpressions throws error "Names should only contain alphabetic characters, spaces, apostrophes, hyphens, and slashes" \
-    Use case ends
+ - 2c. Invalid name (blank/empty) \
+  FirstImpressions throws error "Names should not be blank and must be 100 characters or less." \
+  Use case ends
 
  - 2d. Too many tags \
     FirstImpressions throws error "Remove existing tag before adding new one" \
     Use case ends
 
  - 2e. Invalid tag \
-    FirstImpressions throws error "Tag contains invalid characters" \
+    FirstImpressions throws error "Tag names should not be blank and should only contain letters and numbers (no spaces or special characters)." \
+    Use case ends
+
+ - 2f. Tag is too long \
+    FirstImpressions throws error "Tag name is too long! Please keep it to 50 characters or less." \
+    Use case ends
+
+ - 2g. Email is too long \
+    FirstImpressions throws error "Email address is too long! Please keep it to 50 characters or less." \
     Use case ends
 
 
@@ -740,15 +835,23 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   FirstImpressions throws error "Booking requires datetime, client, team member, and description." \
   Use case ends
 
-- 2c. Invalid client name \
-  FirstImpressions throws error "Invalid client name. Must be 1-100 characters with at least one letter. Only letters, numbers, spaces, hyphens, apostrophes, periods, and slashes are allowed." \
+- 2c. Invalid client name (blank/too long) \
+  FirstImpressions throws error "Client name should not be blank and must be 100 characters or less." \
   Use case ends
 
-- 2d. Duplicate parameter \
+- 2d. Invalid datetime format \
+  FirstImpressions throws error "Invalid date/time format or value!\nPlease use the format: YYYY-MM-DD HH:MM (e.g., 2024-12-25 14:30)" \
+  Use case ends
+
+- 2e. Invalid datetime value \
+  FirstImpressions throws error "Invalid datetime \"[formatted datetime]\", that datetime does not exist " (e.g., "Invalid datetime \"February 31st 2026 14:00\", that datetime does not exist " for invalid dates like February 31st) \
+  Use case ends
+
+- 2f. Duplicate parameter \
   FirstImpressions throws error "Parameter [parameter] specified multiple times. Each parameter should appear only once." \
   Use case ends
 
-- 3e. Unknown parameter \
+- 3g. Unknown parameter \
   FirstImpressions throws error "Unknown parameter: [parameter]. Valid parameters are /d, /c, /p, /desc" \
   Use case ends
 
@@ -835,7 +938,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   Use case ends.
 
 - **1b.** Invalid date format provided. \
-  FirstImpressions displays an error: "Invalid date!" \
+  FirstImpressions displays an error: "Invalid date! Expected format: YYYY-MM-DD (e.g., 2025-10-20)" \
   Use case ends.
 
 - **3a.** No persons match the search criteria. \
@@ -944,7 +1047,7 @@ testers are expected to do more *exploratory* testing.
 4. **Adding a person with invalid data**
 
    1. Test case: `add n/ p/123 e/invalid-email`<br>
-      Expected: Error message "Names should only contain alphabetic characters, spaces, apostrophes, and hyphens"
+      Expected: Error message "Names should not be blank and must be 100 characters or less."
 
 ### Editing a person
 

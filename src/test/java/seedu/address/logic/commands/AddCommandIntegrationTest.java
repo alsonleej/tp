@@ -43,8 +43,8 @@ public class AddCommandIntegrationTest {
         Person personInList = model.getAddressBook().getPersonList().get(0);
         Person personWithNewTags = new PersonBuilder()
                 .withName(personInList.getName().fullName)
-                .withPhone(personInList.getPhone() != null ? personInList.getPhone().value : null)
-                .withEmail(personInList.getEmail() != null ? personInList.getEmail().value : null)
+                .withPhone(null)
+                .withEmail(null)
                 .withTags("newTag")
                 .build();
 
@@ -84,8 +84,8 @@ public class AddCommandIntegrationTest {
         Person personInList = model.getAddressBook().getPersonList().get(0);
         Person personWithMixedTags = new PersonBuilder()
                 .withName(personInList.getName().fullName)
-                .withPhone(personInList.getPhone() != null ? personInList.getPhone().value : null)
-                .withEmail(personInList.getEmail() != null ? personInList.getEmail().value : null)
+                .withPhone(null)
+                .withEmail(null)
                 .withTags("newTag1", "newTag2")
                 .build();
 
@@ -181,6 +181,37 @@ public class AddCommandIntegrationTest {
 
         assertCommandSuccess(new AddCommand(personWithSlash), model,
                 String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithSlash)),
+                expectedModel);
+    }
+
+    @Test
+    public void execute_newPersonWithSpecialCharactersInName_addsPersonSuccessfully() {
+        // Test that names with special characters (previously invalid) can be added
+        Person personWithSpecialChars = new PersonBuilder()
+                .withName("R@chel")
+                .withPhone("81234567")
+                .withEmail("rachel@example.com")
+                .withTags("friend")
+                .build();
+
+        Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
+        expectedModel.addPerson(personWithSpecialChars);
+
+        assertCommandSuccess(new AddCommand(personWithSpecialChars), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithSpecialChars)),
+                expectedModel);
+
+        // Test another person with different special characters
+        Person personWithAmpersand = new PersonBuilder()
+                .withName("James&")
+                .withPhone("91234567")
+                .withEmail("james@example.com")
+                .build();
+
+        expectedModel.addPerson(personWithAmpersand);
+
+        assertCommandSuccess(new AddCommand(personWithAmpersand), model,
+                String.format(AddCommand.MESSAGE_SUCCESS, Messages.format(personWithAmpersand)),
                 expectedModel);
     }
 

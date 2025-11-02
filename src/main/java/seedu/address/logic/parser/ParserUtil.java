@@ -48,6 +48,9 @@ public class ParserUtil {
         if (!Name.isValidName(trimmedName)) {
             throw new ParseException(Name.MESSAGE_CONSTRAINTS);
         }
+        if (trimmedName.length() > Name.MAX_NAME_LENGTH) {
+            throw new ParseException(Name.MESSAGE_LENGTH_CONSTRAINT);
+        }
         return new Name(trimmedName);
     }
 
@@ -62,6 +65,9 @@ public class ParserUtil {
         String trimmedPhone = phone.trim();
         if (!Phone.isValidPhone(trimmedPhone)) {
             throw new ParseException(Phone.MESSAGE_CONSTRAINTS);
+        }
+        if (trimmedPhone.length() > Phone.MAX_PHONE_LENGTH) {
+            throw new ParseException(Phone.MESSAGE_LENGTH_CONSTRAINT);
         }
         return new Phone(trimmedPhone);
     }
@@ -93,6 +99,9 @@ public class ParserUtil {
         if (!Email.isValidEmail(trimmedEmail)) {
             throw new ParseException(Email.MESSAGE_CONSTRAINTS);
         }
+        if (trimmedEmail.length() > Email.MAX_EMAIL_LENGTH) {
+            throw new ParseException(Email.MESSAGE_LENGTH_CONSTRAINT);
+        }
         return new Email(trimmedEmail);
     }
 
@@ -107,6 +116,10 @@ public class ParserUtil {
         String trimmedTag = tag.trim();
         if (!Tag.isValidTagName(trimmedTag)) {
             throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
+        }
+
+        if (trimmedTag.length() > Tag.MAX_TAG_LENGTH) {
+            throw new ParseException(Tag.MESSAGE_LENGTH_CONSTRAINT);
         }
         return new Tag(trimmedTag);
     }
