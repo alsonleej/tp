@@ -195,7 +195,7 @@ Validation is performed in `FindCommandParser` for better separation of concerns
 - **Alternative 1:** Search for results using a logical **AND** operation making search results more accurate and  easy to find specific team members
 - **Alternative 2 (current choice):** Search for results   using a logical **OR** operation to include as many results as possible to ensure user does not miss / mismatch any inputs and intended results
   - *Pros:* Easier to find groups of people even with mismatched input (e.g. `find n/Alex Loh` returns results for `Alex Yeoh` and `Brian Loh`)
-  - *Cons:* Inability to find specific people among team members with similar names (e.g. When rearching for `Alex Yeoh` with a `teamLead` tag among mutiple `Alex Yeoh`s, doing `find n/Alex Yeoh t/teamLead` will list all results for both search parameters)
+  - *Cons:* Inability to find specific people among team members with similar names (e.g. When searching for `Alex Yeoh` with a `teamLead` tag among multiple `Alex Yeoh`s, doing `find n/Alex Yeoh t/teamLead` will list all results for both search parameters)
 
 **Chosen Approach:**
 `find` supports combining multiple prefixes using a logical **OR** relationship.
