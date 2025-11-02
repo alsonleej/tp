@@ -18,20 +18,15 @@ public class Booking {
             "Invalid date/time format or value!\n"
             + "Please use the format: YYYY-MM-DD HH:MM (e.g., 2024-12-25 14:30)";
     public static final String MESSAGE_CONSTRAINTS_CLIENT =
-            "Client name is invalid!\n"
-            + "Requirements:\n"
-            + "• Must be 1-100 characters long\n"
-            + "• Must contain at least one letter\n"
-            + "• Can include letters, numbers, spaces, hyphens (-), apostrophes ('), periods (.), and slashes (/)\n"
-            + "Examples: 'John Doe', 'Mary-Jane O'Brien', 'Ahmad S/O Rahman'";
+            "Client name should not be blank and must be 100 characters or less.";
     public static final String MESSAGE_CONSTRAINTS_DESCRIPTION =
             "Booking description must be between 1 and 500 characters long.";
 
     public static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm")
             .withResolverStyle(ResolverStyle.STRICT);
 
-    // Validation regex for client name
-    private static final String CLIENT_NAME_VALIDATION_REGEX = "^[a-zA-Z0-9 .'\\\\/\\-]+$";
+    // Validation regex for client name - can contain any characters
+    private static final String CLIENT_NAME_VALIDATION_REGEX = ".+";
 
     private final String clientName;
     private final LocalDateTime datetime;
@@ -68,11 +63,7 @@ public class Booking {
         if (trimmed.length() < 1 || trimmed.length() > 100) {
             return false;
         }
-        if (!trimmed.matches(CLIENT_NAME_VALIDATION_REGEX)) {
-            return false;
-        }
-        // Must contain at least one letter
-        return trimmed.matches(".*[a-zA-Z].*");
+        return trimmed.matches(CLIENT_NAME_VALIDATION_REGEX);
     }
 
     /**
@@ -106,11 +97,17 @@ public class Booking {
      * @return Error message if invalid, null if valid
      */
     public static String validateDateTime(String datetimeStr) {
+        // Check if format matches expected pattern first
+        if (!datetimeStr.matches("\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}")) {
+            return MESSAGE_CONSTRAINTS_DATETIME;
+        }
+
         LocalDateTime parsed = parseDateTime(datetimeStr);
         if (parsed == null) {
             // Try to extract the date part for a better error message
             if (datetimeStr.matches("\\d{4}-\\d{2}-\\d{2}\\s+\\d{2}:\\d{2}")) {
                 String datePart = datetimeStr.split("\\s+")[0];
+                String timePart = datetimeStr.split("\\s+")[1];
                 String[] parts = datePart.split("-");
                 if (parts.length == 3) {
                     try {
@@ -119,8 +116,8 @@ public class Booking {
                         int day = Integer.parseInt(parts[2]);
                         String monthName = getMonthName(month);
                         String dayOrdinal = getDayOrdinal(day);
-                        return String.format("Invalid date \"%s %s %d\", that date does not exist "
-                                + "in the (Gregorian) calendar.", monthName, dayOrdinal, year);
+                        return String.format("Invalid datetime \"%s %s %d %s\", that datetime does not exist ",
+                                monthName, dayOrdinal, year, timePart);
                     } catch (NumberFormatException e) {
                         return MESSAGE_CONSTRAINTS_DATETIME;
                     }
