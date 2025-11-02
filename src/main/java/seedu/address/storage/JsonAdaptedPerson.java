@@ -111,7 +111,11 @@ class JsonAdaptedPerson {
         }
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelTags, personBookings);
+        try {
+            return new Person(modelName, modelPhone, modelEmail, modelTags, personBookings);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalValueException(e.getMessage());
+        }
     }
 
 }

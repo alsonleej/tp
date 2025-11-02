@@ -99,4 +99,17 @@ public class JsonAdaptedPersonTest {
         assertThrows(IllegalValueException.class, person::toModelType);
     }
 
+    @Test
+    public void toModelType_tooManyTags_throwsIllegalValueException() {
+        // Create 21 tags (exceeds max of 20)
+        List<JsonAdaptedTag> tooManyTags = new ArrayList<>();
+        for (int i = 1; i <= 21; i++) {
+            tooManyTags.add(new JsonAdaptedTag("tag" + i));
+        }
+        JsonAdaptedPerson person =
+                new JsonAdaptedPerson(VALID_NAME, VALID_PHONE, VALID_EMAIL, tooManyTags,
+                        VALID_BOOKINGS);
+        assertThrows(IllegalValueException.class, person::toModelType);
+    }
+
 }
