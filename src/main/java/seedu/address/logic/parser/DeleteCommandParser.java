@@ -28,7 +28,12 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
     public DeleteCommand parse(String args) throws ParseException {
         try {
             ArgumentMultimap multimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_TAG, PREFIX_BOOKING);
-            String name = multimap.getValue(PREFIX_NAME).orElse("").trim();
+            List<String> allNames = multimap.getAllValues(PREFIX_NAME);
+            if (allNames.size() != 1) {
+                throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                        "Please provide exactly 1 name only!"));
+            }
+            String name = allNames.get(0);
             List<String> allTags = multimap.getAllValues(PREFIX_TAG);
 
             for (String raw : allTags) {
@@ -59,16 +64,23 @@ public class DeleteCommandParser implements Parser<DeleteCommand> {
 
             if (multimap.getValue(PREFIX_BOOKING).isPresent()) {
                 String id = multimap.getValue(PREFIX_BOOKING).orElse("").trim();
-                if (id.isEmpty()) {
+                if (id.isEmpty() || !id.matches("^[0-9]+$")) {
                     throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                            DeleteCommand.MESSAGE_DELETE_BOOKING_USAGE));
+                            DeleteCommand.MESSAGE_DELETE_BOOKING_USAGE) + " (Integer value greater than 0!)");
                 }
-                Integer bookingID = Integer.valueOf(id);
-                if (prefixTagExists) {
-                    throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                            DeleteCommand.MESSAGE_DELETE_BOOKING_OR_TAG));
+                try {
+                    int bookingID = Integer.parseInt(id);
+                    if (bookingID == 0) {
+                        throw new ParseException("Booking ID cannot be 0!");
+                    }
+                    if (prefixTagExists) {
+                        throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                                DeleteCommand.MESSAGE_DELETE_BOOKING_OR_TAG));
+                    }
+                    return new DeleteCommand(targetName, bookingID);
+                } catch (NumberFormatException e) {
+                    throw new ParseException("Booking ID provided is too large!");
                 }
-                return new DeleteCommand(targetName, bookingID);
             }
 
             if (rawTags.isEmpty()) {

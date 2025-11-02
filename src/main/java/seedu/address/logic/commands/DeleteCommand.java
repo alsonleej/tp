@@ -114,6 +114,10 @@ public class DeleteCommand extends Command {
 
         Person personToDelete = findUniquePerson(lastShownList, targetName);
 
+        if (targetBooking < 0) {
+            throw new CommandException("Booking ID must be a valid positive integer!");
+        }
+
         if (targetBooking > 0) {
             List<Booking> bookingList = personToDelete.getBookings();
 
@@ -264,11 +268,10 @@ public class DeleteCommand extends Command {
     }
 
     private Person findUniquePerson(List<Person> list, Name targetName) throws CommandException {
-        String queryName = targetName.toString().trim().replaceAll("\\s+", " ");
+        String queryName = targetName.toString();
 
         List<Person> exactMatch = list.stream()
-                .filter(x -> x.getName().toString().replaceAll("\\s+", " ")
-                        .equals(queryName))
+                .filter(x -> x.getName().toString().equals(queryName))
                 .toList();
         if (exactMatch.size() == 1) {
             logger.fine(String.format("Found exact match for person: %s", targetName.fullName));
@@ -285,7 +288,7 @@ public class DeleteCommand extends Command {
 
         List<Person> contains = list.stream()
                 .filter(x -> x.getName().toString().replaceAll("\\s+", " ")
-                        .contains(queryName))
+                .contains(queryName.replaceAll("\\s+", " ")))
                 .toList();
         if (contains.size() == 1) {
             logger.fine(String.format("Found partial match for person: %s", targetName.fullName));
