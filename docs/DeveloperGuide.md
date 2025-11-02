@@ -300,86 +300,6 @@ The following activity diagram summarizes what happens when a user executes a ne
   * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
   * Cons: We must ensure that the implementation of each individual command are correct.
 
----
-
-### \[Proposed\] Timezone Support
-
-#### Proposed Implementation
-
-The timezone mechanism allows users to work with bookings across different timezones, making the application suitable for global teams and clients.
-
-**Operations:**
-
-  - `Model#setUserTimezone(ZoneId timezone)` — Sets the user's preferred timezone.
-  - `Booking#getDateTimeInTimezone(ZoneId timezone)` — Returns booking datetime converted to specified timezone.
-  - `Booking#createBookingWithTimezone(String clientName, LocalDateTime datetime, String description, ZoneId timezone)` — Creates booking with timezone awareness.
-
-
-#### Usage Scenario
-
-1.  The user sets their preferred timezone: `settimezone Asia/Singapore` <br>
-    <img src="images/TimeZoneSetTimeZoneSequence.png"/> <br>
-
-    **Sequence Diagram for Setting Preferred Timezone**
-
-
-2.  The user creates a booking: `book dt/2025-09-20 10:30 c/Madam Chen n/Bob Lee` <br>
-
-    The system stores the booking in the user's timezone and can display it in other timezones when needed. <br>
-    <img src="images/TimeZoneCreateBookingSequence.png"/> <br>
-
-    **Sequence Diagram for Creating Booking with Timezone Preferences**
-
-
-3.  The user views bookings in a different timezone: `settimezone timezone America/New_York` <br>
-
-    All booking times are automatically converted and displayed in the specified timezone. <br>
-    <img src="images/TimeZoneViewDiffTimezoneSequence.png"/> <br>
-
-    **Sequence Diagram for Viewing Bookings in Different Timezone**
-
-
-#### Design Considerations
-
-**Timezone Storage:**
-
-  - Store all booking datetimes in UTC internally.
-  - Convert to user's preferred timezone for display.
-  - Allow temporary timezone switching for viewing.
-
-**User Preferences:**
-
-  - Store user's default timezone in `UserPrefs`.
-  - Allow timezone changes without affecting existing bookings.
-  - Provide timezone validation and error handling.
-
-**Display Format:**
-
-  - Show timezone information in booking displays.
-  - Provide clear indication when times are converted.
-  - Support multiple timezone formats (e.g., UTC+8, Asia/Singapore).
-
-**Data Migration:**
-
-  - Existing bookings without timezone information default to UTC.
-  - Provide migration tools for existing data.
-  - Maintain backward compatibility.
-
-#### Extensions / Error Cases
-
-  - **Invalid timezone:**
-    Error: "Invalid timezone format. Use format like 'Asia/Singapore' or 'UTC+8'"
-
-  - **Timezone not found:**
-    Error: "Timezone not recognized. Please use a valid timezone identifier"
-
-  - **Conversion errors:**
-    Error: "Unable to convert datetime to specified timezone"
-
-  - **Missing timezone:**
-    Error: "Please set your preferred timezone using 'settimezone' command"
-
-
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Documentation, logging, testing, configuration, dev-ops**
@@ -884,6 +804,86 @@ The edit booking mechanism allows users to update the client name or description
 
   - **Team member mismatch:**
     Error: "Team member name does not match the booking"
+
+---
+
+### Timezone Support for Scheduled Bookings
+
+#### Enhancement Description
+
+The timezone mechanism allows users to work with bookings across different timezones, making the application suitable for global teams and clients.
+
+**Operations:**
+
+  - `Model#setUserTimezone(ZoneId timezone)` — Sets the user's preferred timezone.
+  - `Booking#getDateTimeInTimezone(ZoneId timezone)` — Returns booking datetime converted to specified timezone.
+  - `Booking#createBookingWithTimezone(String clientName, LocalDateTime datetime, String description, ZoneId timezone)` — Creates booking with timezone awareness.
+
+
+#### Usage Scenario
+
+1.  The user sets their preferred timezone: `settimezone Asia/Singapore` <br>
+    <img src="images/TimeZoneSetTimeZoneSequence.png"/> <br>
+
+    **Sequence Diagram for Setting Preferred Timezone**
+
+
+2.  The user creates a booking: `book dt/2025-09-20 10:30 c/Madam Chen n/Bob Lee` <br>
+
+    The system stores the booking in the user's timezone and can display it in other timezones when needed. <br>
+    <img src="images/TimeZoneCreateBookingSequence.png"/> <br>
+
+    **Sequence Diagram for Creating Booking with Timezone Preferences**
+
+
+3.  The user views bookings in a different timezone: `settimezone timezone America/New_York` <br>
+
+    All booking times are automatically converted and displayed in the specified timezone. <br>
+    <img src="images/TimeZoneViewDiffTimezoneSequence.png"/> <br>
+
+    **Sequence Diagram for Viewing Bookings in Different Timezone**
+
+
+#### Design Considerations
+
+**Timezone Storage:**
+
+  - Store all booking datetimes in UTC internally.
+  - Convert to user's preferred timezone for display.
+  - Allow temporary timezone switching for viewing.
+
+**User Preferences:**
+
+  - Store user's default timezone in `UserPrefs`.
+  - Allow timezone changes without affecting existing bookings.
+  - Provide timezone validation and error handling.
+
+**Display Format:**
+
+  - Show timezone information in booking displays.
+  - Provide clear indication when times are converted.
+  - Support multiple timezone formats (e.g., UTC+8, Asia/Singapore).
+
+**Data Migration:**
+
+  - Existing bookings without timezone information default to UTC.
+  - Provide migration tools for existing data.
+  - Maintain backward compatibility.
+
+#### Extensions / Error Cases
+
+  - **Invalid timezone:**
+    Error: "Invalid timezone format. Use format like 'Asia/Singapore' or 'UTC+8'"
+
+  - **Timezone not found:**
+    Error: "Timezone not recognized. Please use a valid timezone identifier"
+
+  - **Conversion errors:**
+    Error: "Unable to convert datetime to specified timezone"
+
+  - **Missing timezone:**
+    Error: "Please set your preferred timezone using 'settimezone' command"
+
 
 --------------------------------------------------------------------------------------------------------------------
 
