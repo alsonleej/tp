@@ -880,7 +880,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 8.  UI remains responsive during bulk ops.
 9.  Should perform all writes atomically so that no contact data is lost on crash or power out.
 10. Should autosave any contact creation, edit or delete within 1s of the action.
-11. Should be fully usable with keyboard only.
+11. The system should support efficient keyboard navigation.
 12. Should provide clear error message and guidance on failed import/export.
 13. Should work for x86 and ARM processors without modification.
 14. Should support multiple file types for import and export (CSV/JSON).
